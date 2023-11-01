@@ -1,0 +1,41 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion Config.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion Config.minSdkVersion
+        targetSdkVersion Config.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation Deps.mozilla_browser_state
+    implementation Deps.mozilla_concept_engine
+    implementation Deps.mozilla_support_base
+    implementation Deps.mozilla_support_ktx
+
+    implementation Deps.androidx_core_ktx
+    implementation Deps.kotlin_coroutines
+    implementation Deps.kotlin_stdlib
+
+    testImplementation Deps.mozilla_support_test
+/*
+    testImplementation Deps.androidx_test_core
+    testImplementation Deps.androidx_test_junit
+    testImplementation Deps.testing_coroutines
+    testImplementation Deps.testing_robolectric
+    testImplementation Deps.testing_mockito*/
+}

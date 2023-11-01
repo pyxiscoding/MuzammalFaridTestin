@@ -1,0 +1,9 @@
+{
+  "default": {
+    "searchDefault": "Luxxle",
+    "visibleDefaultEngines": [
+      "luxxle"]
+  },
+  "regionOverrides": {},
+  "locales": {}
+}
