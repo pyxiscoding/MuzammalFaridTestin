@@ -36,7 +36,6 @@ import mozilla.components.feature.logins.exceptions.LoginExceptionStorage
 import mozilla.components.feature.media.MediaSessionFeature
 import mozilla.components.feature.media.middleware.RecordingDevicesMiddleware
 import mozilla.components.feature.pwa.ManifestStorage
-import mozilla.components.feature.pwa.WebAppShortcutManager
 import mozilla.components.feature.readerview.ReaderViewMiddleware
 import mozilla.components.feature.recentlyclosed.RecentlyClosedMiddleware
 import mozilla.components.feature.search.middleware.SearchMiddleware
@@ -46,8 +45,6 @@ import mozilla.components.feature.session.middleware.LastAccessMiddleware
 import mozilla.components.feature.session.middleware.undo.UndoMiddleware
 import mozilla.components.feature.top.sites.DefaultTopSitesStorage
 import mozilla.components.feature.top.sites.PinnedSiteStorage
-import mozilla.components.feature.webcompat.WebCompatFeature
-import mozilla.components.feature.webcompat.reporter.WebCompatReporterFeature
 import mozilla.components.feature.webnotifications.WebNotificationFeature
 import mozilla.components.lib.dataprotect.SecureAbove22Preferences
 import mozilla.components.lib.dataprotect.generateEncryptionKey
@@ -58,7 +55,6 @@ import mozilla.components.service.location.LocationService
 import mozilla.components.service.location.MozillaLocationService
 import mozilla.components.service.sync.autofill.AutofillCreditCardsAddressesStorage
 import mozilla.components.service.sync.logins.SyncableLoginsStorage
-import mozilla.components.support.locale.LocaleManager
 import org.mozilla.fenix.AppRequestInterceptor
 import org.mozilla.fenix.BuildConfig
 import org.mozilla.fenix.Config
@@ -70,12 +66,11 @@ import org.mozilla.fenix.downloads.DownloadService
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.media.MediaSessionService
+import org.mozilla.fenix.moduleclasses.issueone.WebAppShortcutManager
 import org.mozilla.fenix.perf.StrictModeManager
 import org.mozilla.fenix.perf.lazyMonitored
 import org.mozilla.fenix.search.telemetry.ads.AdsTelemetry
 import org.mozilla.fenix.search.telemetry.incontent.InContentTelemetry
-import org.mozilla.fenix.settings.SupportUtils
-import org.mozilla.fenix.settings.advanced.getSelectedLocale
 import org.mozilla.fenix.utils.Mockable
 import org.mozilla.fenix.utils.getUndoDelay
 import org.mozilla.geckoview.GeckoSession
@@ -85,7 +80,7 @@ import org.mozilla.geckoview.GeckoSession
  */
 @Mockable
 @Suppress("LargeClass")
-class Core(
+open class Core(
     private val context: Context,
     private val crashReporter: CrashReporting,
     strictMode: StrictModeManager
@@ -94,11 +89,11 @@ class Core(
      * The browser engine component initialized based on the build
      * configuration (see build variants).
      */
-    val engine: Engine by lazyMonitored {
+    open val engine: Engine by lazyMonitored {
         val defaultSettings = DefaultSettings(
             requestInterceptor = requestInterceptor,
             remoteDebuggingEnabled = context.settings().isRemoteDebuggingEnabled &&
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.M,
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.R,
             testingModeEnabled = false,
             trackingProtectionPolicy = trackingProtectionPolicyFactory.createTrackingProtectionPolicy(),
             historyTrackingDelegate = HistoryDelegate(lazyHistoryStorage),
@@ -156,7 +151,7 @@ class Core(
     /**
      * [Client] implementation to be used for code depending on `concept-fetch``
      */
-    val client: Client by lazyMonitored {
+    open val client: Client by lazyMonitored {
         GeckoViewFetchClient(
             context,
             GeckoProvider.getOrCreateRuntime(
@@ -182,7 +177,7 @@ class Core(
     /**
      * The [BrowserStore] holds the global [BrowserState].
      */
-    val store by lazyMonitored {
+    open val store by lazyMonitored {
         val middlewareList =
             mutableListOf(
                 LastAccessMiddleware(),
@@ -239,7 +234,7 @@ class Core(
      * case all sessions/tabs are closed.
      */
     @Deprecated("Use browser store (for reading) and use cases (for writing) instead")
-    val sessionManager by lazyMonitored {
+    open val sessionManager by lazyMonitored {
         SessionManager(engine, store).also {
             // Install the "icons" WebExtension to automatically load icons for every visited website.
             icons.install(engine, store)
@@ -281,7 +276,7 @@ class Core(
     /**
      * Shortcut component for managing shortcuts on the device home screen.
      */
-    val webAppShortcutManager by lazyMonitored {
+    open val webAppShortcutManager by lazyMonitored {
         WebAppShortcutManager(
             context,
             client,
@@ -320,11 +315,11 @@ class Core(
     /**
      * A storage component for persisting thumbnail images of tabs.
      */
-    val thumbnailStorage by lazyMonitored { ThumbnailStorage(context) }
+    open val thumbnailStorage by lazyMonitored { ThumbnailStorage(context) }
 
     val pinnedSiteStorage by lazyMonitored { PinnedSiteStorage(context) }
 
-    val topSitesStorage by lazyMonitored {
+    open val topSitesStorage by lazyMonitored {
         val defaultTopSites = mutableListOf<Pair<String, String>>()
 
 //        strictMode.resetAfter(StrictMode.allowThreadDiskReads()) {

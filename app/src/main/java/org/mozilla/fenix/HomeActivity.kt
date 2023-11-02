@@ -7,7 +7,6 @@ package org.mozilla.fenix
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -15,7 +14,6 @@ import android.os.StrictMode
 import android.os.SystemClock
 import android.text.format.DateUtils
 import android.util.AttributeSet
-import android.util.Log
 import android.view.*
 import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import androidx.annotation.CallSuper
@@ -26,7 +24,6 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination
@@ -65,8 +62,6 @@ import mozilla.components.support.ktx.android.content.share
 import mozilla.components.support.ktx.kotlin.isUrl
 import mozilla.components.support.ktx.kotlin.toNormalizedUrl
 import mozilla.components.support.ktx.kotlinx.coroutines.flow.ifChanged
-import mozilla.components.support.locale.LocaleAwareAppCompatActivity
-import mozilla.components.support.locale.LocaleManager
 import mozilla.components.support.utils.SafeIntent
 import mozilla.components.support.utils.toSafeIntent
 import mozilla.components.support.webextensions.WebExtensionPopupFeature
@@ -111,6 +106,7 @@ import org.mozilla.fenix.theme.ThemeManager
 import org.mozilla.fenix.utils.BrowsersCache
 import java.lang.ref.WeakReference
 import java.util.*
+
 
 /**
  * The main activity of the application. The application is primarily a single Activity (this one)
@@ -165,11 +161,11 @@ open class HomeActivity : AppCompatActivity(), NavHostActivity {
 
     private lateinit var navigationToolbar: Toolbar
 
+
     final override fun onCreate(savedInstanceState: Bundle?): Unit =
         PerfStartup.homeActivityOnCreate.measureNoInline {
             // DO NOT MOVE ANYTHING ABOVE THIS addMarker CALL.
             components.core.engine.profiler?.addMarker("Activity.onCreate", "HomeActivity")
-
             components.strictMode.attachListenerToDisablePenaltyDeath(supportFragmentManager)
             // There is disk read violations on some devices such as samsung and pixel for android 9/10
             components.strictMode.resetAfter(StrictMode.allowThreadDiskReads()) {
@@ -577,14 +573,6 @@ open class HomeActivity : AppCompatActivity(), NavHostActivity {
         }.toTypedArray()
     }
 
-    override fun onBackPressed() {
-        supportFragmentManager.primaryNavigationFragment?.childFragmentManager?.fragments?.forEach {
-            if (it is UserInteractionHandler && it.onBackPressed()) {
-                return
-            }
-        }
-    }
-
     final override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         supportFragmentManager.primaryNavigationFragment?.childFragmentManager?.fragments?.forEach {
             if (it is ActivityResultHandler && it.onActivityResult(requestCode, data, resultCode)) {
@@ -739,6 +727,11 @@ open class HomeActivity : AppCompatActivity(), NavHostActivity {
 
         navigationToolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
+        supportFragmentManager.primaryNavigationFragment?.childFragmentManager?.fragments?.forEach {
+            if (it is UserInteractionHandler && it.onBackPressed()) {
+                return
+            }
         }
     }
 

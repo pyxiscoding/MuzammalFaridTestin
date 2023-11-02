@@ -32,7 +32,7 @@ object Versions {
     const val androidx_core = "1.3.2"
     const val androidx_paging = "2.1.2"
     const val androidx_transition = "1.4.0"
-    const val androidx_work = "2.7.1"
+    const val androidx_work = "2.8.1"
     const val google_material = "1.2.1"
 
     const val mozilla_android_components = AndroidComponents.VERSION

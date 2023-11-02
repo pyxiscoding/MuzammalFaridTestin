@@ -14,8 +14,8 @@ import mozilla.components.concept.base.crash.CrashReporting
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.Settings
 import mozilla.components.concept.fetch.Client
-import mozilla.components.feature.pwa.WebAppShortcutManager
 import mozilla.components.feature.top.sites.DefaultTopSitesStorage
+import org.mozilla.fenix.moduleclasses.issueone.WebAppShortcutManager
 
 class TestCore(context: Context, crashReporter: CrashReporting) : Core(
     context,

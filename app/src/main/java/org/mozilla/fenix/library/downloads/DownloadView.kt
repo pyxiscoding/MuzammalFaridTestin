@@ -117,7 +117,6 @@ class DownloadView(
             download_empty_view.announceForAccessibility(context.getString(R.string.download_empty_message_1))
         }
     }
-
     override fun onBackPressed(): Boolean {
         return interactor.onBackPressed()
     }
