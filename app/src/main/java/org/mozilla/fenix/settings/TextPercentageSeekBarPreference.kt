@@ -36,6 +36,7 @@ import android.widget.TextView
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.RangeInfoCompat.RANGE_TYPE_PERCENT
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
+import mozilla.components.concept.engine.prompt.Choice
 import org.mozilla.fenix.R
 
 import java.text.NumberFormat
@@ -58,9 +59,7 @@ import kotlin.math.roundToInt
  * Other [SeekBar] specific attributes (e.g. `title, summary, defaultValue, min, max`)
  * can be set directly on the preference widget layout.
  */
-@Suppress("DEPRECATION")
-@SuppressWarnings("LargeClass")
-class TextPercentageSeekBarPreference @JvmOverloads constructor(
+class TextPercentageSeekBarPreference constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.seekBarPreferenceStyle,
@@ -450,16 +449,13 @@ class TextPercentageSeekBarPreference @JvmOverloads constructor(
             dest.writeInt(mMax)
         }
 
-        companion object {
-            @JvmField
-            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
-                override fun createFromParcel(`in`: Parcel): SavedState {
-                    return SavedState(`in`)
-                }
+        companion object CREATOR : Parcelable.Creator<SavedState> {
+            override fun createFromParcel(parcel: Parcel): SavedState {
+                return SavedState(parcel)
+            }
 
-                override fun newArray(size: Int): Array<SavedState?> {
-                    return arrayOfNulls(size)
-                }
+            override fun newArray(size: Int): Array<SavedState?> {
+                return arrayOfNulls(size)
             }
         }
     }
