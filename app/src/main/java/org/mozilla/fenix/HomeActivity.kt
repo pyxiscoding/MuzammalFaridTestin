@@ -31,12 +31,8 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.custom_search_engine.*
-import kotlinx.android.synthetic.main.search_engine_radio_button.view.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import mozilla.appservices.places.BookmarkRoot
 import mozilla.components.browser.state.search.SearchEngine
@@ -74,6 +70,7 @@ import org.mozilla.fenix.browser.browsingmode.BrowsingModeManager
 import org.mozilla.fenix.browser.browsingmode.DefaultBrowsingModeManager
 import org.mozilla.fenix.components.metrics.BreadcrumbsRecorder
 import org.mozilla.fenix.components.metrics.Event
+import org.mozilla.fenix.databinding.ActivityHomeBinding
 import org.mozilla.fenix.exceptions.trackingprotection.TrackingProtectionExceptionsFragmentDirections
 import org.mozilla.fenix.ext.*
 import org.mozilla.fenix.home.HomeFragmentDirections
@@ -160,6 +157,7 @@ open class HomeActivity : AppCompatActivity(), NavHostActivity {
     private var backLongPressJob: Job? = null
 
     private lateinit var navigationToolbar: Toolbar
+    private lateinit var binding: ActivityHomeBinding
 
 
     final override fun onCreate(savedInstanceState: Bundle?): Unit =
@@ -171,6 +169,8 @@ open class HomeActivity : AppCompatActivity(), NavHostActivity {
             components.strictMode.resetAfter(StrictMode.allowThreadDiskReads()) {
                 super.onCreate(savedInstanceState)
             }
+            binding = ActivityHomeBinding.inflate(layoutInflater)
+            setContentView(binding.root)
 
             // Diagnostic breadcrumb for "Display already aquired" crash:
             // https://github.com/mozilla-mobile/android-components/issues/7960
@@ -190,7 +190,7 @@ open class HomeActivity : AppCompatActivity(), NavHostActivity {
             // Must be after we set the content view
             if (isVisuallyComplete) {
                 components.performance.visualCompletenessQueue.attachViewToRunVisualCompletenessQueueLater(
-                        WeakReference(rootContainer)
+                        WeakReference(binding.root)
                     )
             }
 
@@ -286,10 +286,10 @@ open class HomeActivity : AppCompatActivity(), NavHostActivity {
 
             when (result) {
                 SearchStringValidator.Result.CannotReach -> {
-                    custom_search_engine_search_string_field.error = resources.getString(
-                            R.string.search_add_custom_engine_error_cannot_reach,
-                            name
-                        )
+                    resources.getString(
+                        R.string.search_add_custom_engine_error_cannot_reach,
+                        name
+                    )
                 }
 
                 SearchStringValidator.Result.Success -> {
@@ -319,7 +319,7 @@ open class HomeActivity : AppCompatActivity(), NavHostActivity {
         safeIntent: SafeIntent, hasSavedInstanceState: Boolean
     ) {
         components.appStartupTelemetry.onHomeActivityOnCreate(
-            safeIntent, hasSavedInstanceState, homeActivityInitTimeStampNanoSeconds, rootContainer
+            safeIntent, hasSavedInstanceState, homeActivityInitTimeStampNanoSeconds, binding.root
         )
     }
 
@@ -331,7 +331,7 @@ open class HomeActivity : AppCompatActivity(), NavHostActivity {
     }
 
     private fun startupTelemetryOnRestartCalled() {
-        components.appStartupTelemetry.onHomeActivityOnRestart(rootContainer)
+        components.appStartupTelemetry.onHomeActivityOnRestart(binding.root)
     }
 
     @CallSuper
@@ -381,7 +381,7 @@ open class HomeActivity : AppCompatActivity(), NavHostActivity {
             message = "onStart()"
         )
 
-        ProfilerMarkers.homeActivityOnStart(rootContainer, components.core.engine.profiler)
+        ProfilerMarkers.homeActivityOnStart(binding.root, components.core.engine.profiler)
     }
 
     override fun onStop() {
@@ -706,7 +706,7 @@ open class HomeActivity : AppCompatActivity(), NavHostActivity {
      */
     override fun getSupportActionBarAndInflateIfNecessary(): ActionBar {
         if (!isToolbarInflated) {
-            navigationToolbar = navigationToolbarStub.inflate() as Toolbar
+            navigationToolbar = binding.navigationToolbarStub.inflate() as Toolbar
 
             setSupportActionBar(navigationToolbar)
             // Add ids to this that we don't want to have a toolbar back button

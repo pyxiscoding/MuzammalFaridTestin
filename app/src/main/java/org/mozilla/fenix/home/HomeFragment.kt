@@ -53,10 +53,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_delete_browsing_data.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.no_collections_message.view.add_tabs_to_collections_button
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -102,6 +98,7 @@ import org.mozilla.fenix.components.tips.Tip
 import org.mozilla.fenix.components.tips.providers.MasterPasswordTipProvider
 import org.mozilla.fenix.components.toolbar.FenixTabCounterMenu
 import org.mozilla.fenix.components.toolbar.ToolbarPosition
+import org.mozilla.fenix.databinding.FragmentHomeBinding
 import org.mozilla.fenix.ext.*
 import org.mozilla.fenix.ext.runIfFragmentIsAttached
 import org.mozilla.fenix.home.mozonline.showPrivacyPopWindow
@@ -131,12 +128,13 @@ import kotlin.math.min
 class HomeFragment : Fragment() {
     private val args by navArgs<HomeFragmentArgs>()
     private lateinit var bundleArgs: Bundle
+    lateinit var binding: FragmentHomeBinding
 
     private val homeViewModel: HomeScreenViewModel by activityViewModels()
 
     private val snackbarAnchorView: View?
         get() = when (requireContext().settings().toolbarPosition) {
-            ToolbarPosition.BOTTOM -> toolbarLayout
+            ToolbarPosition.BOTTOM -> binding.toolbarLayout
             ToolbarPosition.TOP -> null
         }
 
@@ -145,7 +143,7 @@ class HomeFragment : Fragment() {
     private val collectionStorageObserver = object : TabCollectionStorage.Observer {
         override fun onCollectionRenamed(tabCollection: TabCollection, title: String) {
             lifecycleScope.launch(Main) {
-                view?.sessionControlRecyclerView?.adapter?.notifyDataSetChanged()
+                binding?.sessionControlRecyclerView?.adapter?.notifyDataSetChanged()
             }
             showRenamedSnackbar()
         }
@@ -177,7 +175,7 @@ class HomeFragment : Fragment() {
 
 
     @VisibleForTesting
-    internal var getMenuButton: () -> MenuButton? = { menuButton }
+    internal var getMenuButton: () -> MenuButton? = { binding.menuButton }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -203,12 +201,12 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = PerfStartup.homeFragmentOnCreateView.measureNoInline {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         val activity = activity as HomeActivity
         val components = requireComponents
 
         currentMode = CurrentMode(
-            view.context,
+            requireView().context,
             onboarding,
             browsingModeManager,
             ::dispatchModeChanges
@@ -244,7 +242,7 @@ class HomeFragment : Fragment() {
                 config = ::getTopSitesConfig
             ),
             owner = viewLifecycleOwner,
-            view = view
+            view = binding.root
         )
 
         _sessionControlInteractor = SessionControlInteractor(
@@ -270,17 +268,17 @@ class HomeFragment : Fragment() {
             )
         )
 
-        updateLayout(view)
+        updateLayout(binding.root)
         sessionControlView = SessionControlView(
-            view.sessionControlRecyclerView,
+            binding.sessionControlRecyclerView,
             viewLifecycleOwner,
             sessionControlInteractor,
             homeViewModel
         )
 
-        updateSessionControlView(view)
+        updateSessionControlView(binding.root)
 
-        appBarLayout = view.homeAppBar
+        appBarLayout = binding.homeAppBar
 
         activity.themeManager.applyStatusBarTheme(activity)
 
@@ -299,7 +297,7 @@ class HomeFragment : Fragment() {
         settings = requireContext().settings()
 
 
-        view
+        binding.root
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -348,7 +346,7 @@ class HomeFragment : Fragment() {
     private fun updateLayout(view: View) {
         when (view.context.settings().toolbarPosition) {
             ToolbarPosition.TOP -> {
-                view.toolbarLayout.layoutParams = CoordinatorLayout.LayoutParams(
+                binding.toolbarLayout.layoutParams = CoordinatorLayout.LayoutParams(
                     ConstraintLayout.LayoutParams.MATCH_PARENT,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT
                 ).apply {
@@ -356,21 +354,21 @@ class HomeFragment : Fragment() {
                 }
 
                 ConstraintSet().apply {
-                    clone(view.toolbarLayout)
-                    clear(view.bottom_bar.id, BOTTOM)
-                    clear(view.bottomBarShadow.id, BOTTOM)
-                    connect(view.bottom_bar.id, TOP, PARENT_ID, TOP)
-                    connect(view.bottomBarShadow.id, TOP, view.bottom_bar.id, BOTTOM)
-                    connect(view.bottomBarShadow.id, BOTTOM, PARENT_ID, BOTTOM)
-                    applyTo(view.toolbarLayout)
+                    clone(binding.toolbarLayout)
+                    clear(binding.bottomBar.id, BOTTOM)
+                    clear(binding.bottomBarShadow.id, BOTTOM)
+                    connect(binding.bottomBar.id, TOP, PARENT_ID, TOP)
+                    connect(binding.bottomBarShadow.id, TOP, binding.bottomBar.id, BOTTOM)
+                    connect(binding.bottomBarShadow.id, BOTTOM, PARENT_ID, BOTTOM)
+                    applyTo(binding.toolbarLayout)
                 }
 
-                view.bottom_bar.background = AppCompatResources.getDrawable(
+                binding.bottomBar.background = AppCompatResources.getDrawable(
                     view.context,
                     view.context.theme.resolveAttribute(R.attr.bottomBarBackgroundTop)
                 )
 
-                view.homeAppBar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                binding.homeAppBar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     topMargin =
                         resources.getDimensionPixelSize(R.dimen.home_fragment_top_toolbar_header_margin)
                 }
@@ -392,39 +390,39 @@ class HomeFragment : Fragment() {
                 * If the user has been onboarded hide the recyclerview
                 * and show the luxxle logo
                 * */
-                sessionControlRecyclerView.visibility = View.GONE
-                logo_holder.visibility = View.VISIBLE
+                binding.sessionControlRecyclerView.visibility = View.GONE
+                binding.logoHolder.visibility = View.VISIBLE
             } else {
-                logo_holder.visibility = View.GONE
+                binding.logoHolder.visibility = View.GONE
             }
 
             observeSearchEngineChanges()
-            createHomeMenu(requireContext(), WeakReference(view.menuButton))
+            createHomeMenu(requireContext(), WeakReference(binding.menuButton))
             createTabCounterMenu(view)
 
-            view.menuButton.setColorFilter(
+            binding.menuButton.setColorFilter(
                 ContextCompat.getColor(
                     requireContext(),
                     ThemeManager.resolveAttribute(R.attr.primaryText, requireContext())
                 )
             )
 
-            view.toolbar.compoundDrawablePadding =
+            binding.toolbar.compoundDrawablePadding =
                 view.resources.getDimensionPixelSize(R.dimen.search_bar_search_engine_icon_padding)
-            view.toolbar_wrapper.setOnClickListener {
+            binding.toolbarWrapper.setOnClickListener {
                 Log.d("TAG", "Clicked Searchbar")
                 navigateToSearch()
                 requireComponents.analytics.metrics.track(Event.SearchBarTapped(Event.SearchBarTapped.Source.HOME))
             }
 
-            view.delete_history.setOnClickListener {
+            binding.deleteHistory.setOnClickListener {
                 // Delete Browsing Data on Quit Switch
                 askToDelete()
             }
 
-            view.toolbar_wrapper.setOnLongClickListener {
+            binding.toolbarWrapper.setOnLongClickListener {
                 ToolbarPopupWindow.show(
-                    WeakReference(it),
+                    WeakReference(binding.root),
                     handlePasteAndGo = sessionControlInteractor::onPasteAndGo,
                     handlePaste = sessionControlInteractor::onPaste,
                     copyVisible = false
@@ -433,12 +431,12 @@ class HomeFragment : Fragment() {
             }
 
 
-            view.tab_button.setOnClickListener {
+            binding.tabButton.setOnClickListener {
                 openTabTray()
             }
 
             PrivateBrowsingButtonView(
-                privateBrowsingButton,
+                binding.privateBrowsingButton,
                 browsingModeManager
             ) { newMode ->
                 if (newMode == BrowsingMode.Private) {
@@ -498,9 +496,9 @@ class HomeFragment : Fragment() {
                             true
                         )
                         val icon = BitmapDrawable(context?.resources, scaledIcon)
-                        search_engine_icon?.setImageDrawable(icon)
+                        binding.searchEngineIcon?.setImageDrawable(icon)
                     } else {
-                        search_engine_icon.setImageDrawable(null)
+                        binding.searchEngineIcon.setImageDrawable(null)
                     }
                 }
         }
@@ -534,7 +532,7 @@ class HomeFragment : Fragment() {
         }
 
         tabCounterMenu.updateMenu(showOnly = inverseBrowsingMode)
-        view.tab_button.setOnLongClickListener {
+        binding.tabButton.setOnLongClickListener {
             tabCounterMenu.menuController.show(anchor = it)
             true
         }
@@ -649,7 +647,7 @@ class HomeFragment : Fragment() {
                                 isDisplayedWithBrowserToolbar = false
                             )
                                 .setText(it.context.getString(R.string.onboarding_firefox_account_sync_is_on))
-                                .setAnchorView(toolbarLayout)
+                                .setAnchorView(binding.toolbarLayout)
                                 .show()
                         }
                     }
@@ -765,12 +763,12 @@ class HomeFragment : Fragment() {
             }
             // We want to show the popup only after privateBrowsingButton is available.
             // Otherwise, we will encounter an activity token error.
-            privateBrowsingButton.post {
+            binding.privateBrowsingButton.post {
                 runIfFragmentIsAttached {
                     context.settings().showedPrivateModeContextualFeatureRecommender = true
                     context.settings().lastCfrShownTimeInMillis = System.currentTimeMillis()
                     privateBrowsingRecommend.showAsDropDown(
-                        privateBrowsingButton, 0, CFR_Y_OFFSET, Gravity.TOP or Gravity.END
+                        binding.privateBrowsingButton, 0, CFR_Y_OFFSET, Gravity.TOP or Gravity.END
                     )
                 }
             }
@@ -794,8 +792,8 @@ class HomeFragment : Fragment() {
         * Hides collection and top sites
         * on start browsing click
         * */
-        sessionControlRecyclerView.visibility = View.GONE
-        logo_holder.visibility = View.VISIBLE
+        binding.sessionControlRecyclerView.visibility = View.GONE
+        binding.logoHolder.visibility = View.VISIBLE
         hideOnboardingIfNeeded()
         navigateToSearch()
     }
@@ -1101,12 +1099,12 @@ class HomeFragment : Fragment() {
             browserState.normalTabs.size
         }
 
-        view?.tab_button?.setCountWithAnimation(tabCount)
-        view?.add_tabs_to_collections_button?.isVisible = tabCount > 0
+        binding?.tabButton?.setCountWithAnimation(tabCount)
+//        binding?.add_tabs_to_collections_button?.isVisible = tabCount > 0
     }
 
     private fun handleSwipedItemDeletionCancel() {
-        view?.sessionControlRecyclerView?.adapter?.notifyDataSetChanged()
+        binding?.sessionControlRecyclerView?.adapter?.notifyDataSetChanged()
     }
 
     companion object {

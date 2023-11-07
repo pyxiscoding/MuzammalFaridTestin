@@ -4,7 +4,6 @@ plugins {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'jacoco'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
@@ -18,9 +17,8 @@ import org.gradle.internal.logging.text.StyledTextOutputFactory
 import static org.gradle.api.tasks.testing.TestResult.ResultType
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion Config.compileSdkVersion
     ndkVersion "22.1.7171670"
-
     if (project.hasProperty("testBuildType")) {
         // Allowing to configure the test build type via command line flag (./gradlew -PtestBuildType=beta ..)
         // in order to run UI tests against other build variants than debug in automation.
@@ -206,6 +204,10 @@ android {
         exclude 'META-INF/atomicfu.kotlin_module'
     }
 
+    android {
+        viewBinding.enabled = true
+    }
+
     testOptions {
         unitTests.returnDefaultValues = true
 
@@ -388,10 +390,6 @@ android.applicationVariants.all { variant ->
     } else {
         buildConfigField 'Boolean', 'MOZILLA_OFFICIAL', 'false'
     }
-}
-
-androidExtensions {
-    experimental = true
 }
 
 // Generate Kotlin code and markdown docs for the Fenix Glean metrics.
@@ -768,14 +766,6 @@ if (gradle.hasProperty('localProperties.autoPublish.application-services.dir')) 
     ext.appServicesSrcDir = gradle."localProperties.autoPublish.application-services.dir"
     apply from: "../${appServicesSrcDir}/build-scripts/substitute-local-appservices.gradle"
 }
-
-// Define a reusable task for updating the versions of our built-in web extensions. We automate this
-// to make sure we never forget to update the version, either in local development or for releases.
-// In both cases, we want to make sure the latest version of all extensions (including their latest
-// changes) are installed on first start-up.
-// We're using the A-C version here as we want to uplift all built-in extensions to A-C (Once that's
-// done we can also remove the task below):
-// https://github.com/mozilla-mobile/android-components/issues/7249
 ext.updateExtensionVersion = { task, extDir ->
     configure(task) {
         from extDir

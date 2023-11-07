@@ -7,12 +7,14 @@ package org.mozilla.fenix.collections
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.collection_tab_list_row.*
 import org.mozilla.fenix.R
+import org.mozilla.fenix.databinding.CollectionTabListRowBinding
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.loadIntoView
 import org.mozilla.fenix.home.Tab
@@ -25,12 +27,12 @@ class CollectionCreationTabListAdapter(
     private var tabs: List<Tab> = listOf()
     private var selectedTabs: MutableSet<Tab> = mutableSetOf()
     private var hideCheckboxes = false
+    private lateinit var binding: CollectionTabListRowBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(TabViewHolder.LAYOUT_ID, parent, false)
+        binding = CollectionTabListRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return TabViewHolder(view)
+        return TabViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: TabViewHolder, position: Int, payloads: MutableList<Any>) {
@@ -91,7 +93,7 @@ class CollectionCreationTabListAdapter(
 class TabViewHolder(view: View) : ViewHolder(view) {
 
     init {
-        collection_item_tab.setOnClickListener {
+        view.findViewById<CardView>(R.id.collection_item_tab).setOnClickListener {
             tab_selected_checkbox.isChecked = !tab_selected_checkbox.isChecked
         }
     }
@@ -106,9 +108,5 @@ class TabViewHolder(view: View) : ViewHolder(view) {
         }
 
         itemView.context.components.core.icons.loadIntoView(favicon_image, tab.url)
-    }
-
-    companion object {
-        const val LAYOUT_ID = R.layout.collection_tab_list_row
     }
 }

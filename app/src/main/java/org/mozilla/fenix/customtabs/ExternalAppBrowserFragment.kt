@@ -6,13 +6,14 @@ package org.mozilla.fenix.customtabs
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.os.SystemClock
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.navArgs
-import kotlinx.android.synthetic.main.component_browser_top_toolbar.*
-import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.components.browser.state.state.SessionState
 import mozilla.components.concept.engine.manifest.WebAppManifestParser
@@ -32,6 +33,8 @@ import org.mozilla.fenix.browser.BaseBrowserFragment
 import org.mozilla.fenix.browser.CustomTabContextMenuCandidate
 import org.mozilla.fenix.browser.FenixSnackbarDelegate
 import org.mozilla.fenix.components.metrics.Event
+import org.mozilla.fenix.databinding.ComponentBrowserTopToolbarBinding
+import org.mozilla.fenix.databinding.FragmentBrowserBinding
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.nav
 import org.mozilla.fenix.ext.requireComponents
@@ -49,6 +52,19 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
     private val customTabsIntegration = ViewBoundFeatureWrapper<CustomTabsIntegration>()
     private val windowFeature = ViewBoundFeatureWrapper<CustomTabWindowFeature>()
     private val hideToolbarFeature = ViewBoundFeatureWrapper<WebAppHideToolbarFeature>()
+    private lateinit var binding: FragmentBrowserBinding
+    private lateinit var toolbarBinding: ComponentBrowserTopToolbarBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
+        binding = FragmentBrowserBinding.inflate(inflater, container, false)
+        toolbarBinding = ComponentBrowserTopToolbarBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     @Suppress("LongMethod", "ComplexMethod")
     override fun initializeUI(view: View, tab: SessionState) {
@@ -63,7 +79,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
             feature = CustomTabsIntegration(
                 store = requireComponents.core.store,
                 useCases = requireComponents.useCases.customTabsUseCases,
-                toolbar = toolbar,
+                toolbar = toolbarBinding.toolbar,
                 sessionId = customTabSessionId,
                 activity = activity,
                 onItemTapped = { browserInteractor.onBrowserToolbarMenuItemTapped(it) },
@@ -104,14 +120,14 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
                 browserToolbarView.view.isVisible = toolbarVisible
                 webAppToolbarShouldBeVisible = toolbarVisible
                 if (!toolbarVisible) {
-                    engineView.setDynamicToolbarMaxHeight(0)
+                    binding.engineView.setDynamicToolbarMaxHeight(0)
                     val browserEngine =
-                        swipeRefresh.layoutParams as CoordinatorLayout.LayoutParams
+                        binding.swipeRefresh.layoutParams as CoordinatorLayout.LayoutParams
                     browserEngine.bottomMargin = 0
                 }
             },
             owner = this,
-            view = toolbar
+            view = toolbarBinding.toolbar
         )
 
         if (manifest != null) {

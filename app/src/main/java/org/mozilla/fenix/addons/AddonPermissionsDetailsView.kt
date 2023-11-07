@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_add_on_permissions.*
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.ui.AddonPermissionsAdapter
 import org.mozilla.fenix.R
+import org.mozilla.fenix.databinding.FragmentAddOnPermissionsBinding
 import org.mozilla.fenix.theme.ThemeManager
 
 interface AddonPermissionsDetailsInteractor {

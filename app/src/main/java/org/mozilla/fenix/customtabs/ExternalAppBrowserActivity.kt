@@ -10,7 +10,6 @@ import android.os.PersistableBundle
 import androidx.annotation.VisibleForTesting
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDirections
-import kotlinx.android.synthetic.main.activity_home.*
 import mozilla.components.browser.state.selector.findCustomTab
 import mozilla.components.browser.state.state.SessionState
 import mozilla.components.concept.engine.manifest.WebAppManifestParser
@@ -21,6 +20,7 @@ import org.mozilla.fenix.BrowserDirection
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.NavGraphDirections
 import org.mozilla.fenix.components.metrics.Event
+import org.mozilla.fenix.databinding.ActivityHomeBinding
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.enableSystemInsetsHandling
 import java.security.InvalidParameterException
@@ -32,8 +32,12 @@ import java.security.InvalidParameterException
 @Suppress("TooManyFunctions")
 open class ExternalAppBrowserActivity : HomeActivity() {
 
+    private lateinit var binding: ActivityHomeBinding
+
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         enableSystemInsetsHandling()
     }
 
@@ -67,7 +71,7 @@ open class ExternalAppBrowserActivity : HomeActivity() {
             hasSavedInstanceState,
             // HomeActivity is init before ExternalAppBrowserActivity so we use that time.
             homeActivityInitTimeStampNanoSeconds,
-            rootContainer
+            binding.rootContainer
         )
     }
 

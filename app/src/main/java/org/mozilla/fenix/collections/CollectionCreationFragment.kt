@@ -12,11 +12,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import kotlinx.android.synthetic.main.fragment_create_collection.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.components.lib.state.ext.consumeFrom
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.StoreProvider
+import org.mozilla.fenix.databinding.FragmentCreateCollectionBinding
 import org.mozilla.fenix.ext.requireComponents
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -24,6 +24,7 @@ class CollectionCreationFragment : DialogFragment() {
     private lateinit var collectionCreationView: CollectionCreationView
     private lateinit var collectionCreationStore: CollectionCreationStore
     private lateinit var collectionCreationInteractor: CollectionCreationInteractor
+    private lateinit var binding: FragmentCreateCollectionBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +37,7 @@ class CollectionCreationFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_create_collection, container, false)
+        binding = FragmentCreateCollectionBinding.inflate(inflater, container, false)
         val args: CollectionCreationFragmentArgs by navArgs()
 
         collectionCreationStore = StoreProvider.get(this) {
@@ -63,11 +64,11 @@ class CollectionCreationFragment : DialogFragment() {
             )
         )
         collectionCreationView = CollectionCreationView(
-            view.createCollectionWrapper,
+            binding.createCollectionWrapper,
             collectionCreationInteractor
         )
 
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

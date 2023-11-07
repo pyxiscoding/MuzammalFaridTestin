@@ -7,15 +7,17 @@ package org.mozilla.fenix.addons
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_not_yet_supported_addons.view.*
 import mozilla.components.feature.addons.ui.UnsupportedAddonsAdapter
 import mozilla.components.feature.addons.ui.UnsupportedAddonsAdapterDelegate
 import org.mozilla.fenix.R
+import org.mozilla.fenix.databinding.FragmentNotYetSupportedAddonsBinding
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.showToolbar
 
@@ -30,6 +32,16 @@ class NotYetSupportedAddonFragment :
 
     private val args by navArgs<NotYetSupportedAddonFragmentArgs>()
     private var unsupportedAddonsAdapter: UnsupportedAddonsAdapter? = null
+    private lateinit var binding: FragmentNotYetSupportedAddonsBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentNotYetSupportedAddonsBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,12 +52,12 @@ class NotYetSupportedAddonFragment :
             addons = args.addons.toList()
         )
 
-        view.unsupported_add_ons_list.apply {
+        binding.unsupportedAddOnsList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = unsupportedAddonsAdapter
         }
 
-        view.learn_more_label.setOnClickListener {
+        binding.learnMoreLabel.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(LEARN_MORE_URL))
             startActivity(intent)
         }

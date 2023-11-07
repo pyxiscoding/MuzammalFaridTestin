@@ -6,8 +6,10 @@ package org.mozilla.fenix.browser
 
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
@@ -16,8 +18,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_browser.*
-import kotlinx.android.synthetic.main.fragment_browser.view.*
 import kotlinx.coroutines.*
 import mozilla.components.browser.state.selector.findTab
 import mozilla.components.browser.state.state.TabSessionState
@@ -36,6 +36,7 @@ import org.mozilla.fenix.R
 import org.mozilla.fenix.components.FenixSnackbar
 import org.mozilla.fenix.components.TabCollectionStorage
 import org.mozilla.fenix.components.metrics.Event
+import org.mozilla.fenix.databinding.FragmentBrowserBinding
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.nav
 import org.mozilla.fenix.ext.navigateSafe
@@ -60,6 +61,16 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
 
     private var readerModeAvailable = false
     private var pwaOnboardingObserver: PwaOnboardingObserver? = null
+    lateinit var binding: FragmentBrowserBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentBrowserBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
 
     @Suppress("LongMethod")
@@ -72,11 +83,11 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
 
 
         if (context.settings().isSwipeToolbarToSwitchTabsEnabled) {
-            gestureLayout.addGestureListener(
+            binding.gestureLayout.addGestureListener(
                 ToolbarGestureHandler(
                     activity = requireActivity(),
-                    contentLayout = browserLayout,
-                    tabPreview = tabPreview,
+                    contentLayout = binding.browserLayout,
+                    tabPreview = binding.tabPreview,
                     toolbarLayout = browserToolbarView.view,
                     store = components.core.store,
                     selectTabUseCase = components.useCases.tabsUseCases.selectTab
@@ -103,7 +114,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         browserToolbarView.view.addPageAction(readerModeAction)
 
         thumbnailsFeature.set(
-            feature = BrowserThumbnails(context, view.engineView, components.core.store),
+            feature = BrowserThumbnails(context, binding.engineView, components.core.store),
             owner = this,
             view = view
         )
@@ -114,7 +125,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                     context,
                     components.core.engine,
                     components.core.store,
-                    view.readerViewControlsBar
+                    binding.readerViewControlsBar
                 ) { available, active ->
                     if (available) {
                         components.analytics.metrics.track(Event.ReaderModeAvailable)
@@ -154,7 +165,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                     navController = findNavController(),
                     settings = context.settings(),
                     appLinksUseCases = context.components.useCases.appLinksUseCases,
-                    container = browserLayout as ViewGroup,
+                    container = binding.browserLayout as ViewGroup,
                     shouldScrollWithTopToolbar = !context.settings().shouldUseBottomToolbar
                 ),
                 owner = this,
@@ -276,7 +287,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                     }
                 }
                 FenixSnackbar.make(
-                    view = view.browserLayout,
+                    view = binding.browserLayout,
                     duration = Snackbar.LENGTH_SHORT,
                     isDisplayedWithBrowserToolbar = true
                 )

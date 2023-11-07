@@ -10,13 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import kotlinx.android.synthetic.main.fragment_add_on_internal_settings.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.components.browser.state.action.WebExtensionAction
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.lib.state.ext.consumeFrom
 import org.mozilla.fenix.R
+import org.mozilla.fenix.databinding.FragmentAddOnInternalSettingsBinding
 import org.mozilla.fenix.ext.requireComponents
 import org.mozilla.fenix.ext.showToolbar
 
@@ -28,6 +28,7 @@ class WebExtensionActionPopupFragment : AddonPopupBaseFragment(), EngineSession.
     private val args by navArgs<WebExtensionActionPopupFragmentArgs>()
     private val coreComponents by lazy { requireComponents.core }
     private val safeArguments get() = requireNotNull(arguments)
+    private lateinit var binding: FragmentAddOnInternalSettingsBinding
     private var sessionConsumed
         get() = safeArguments.getBoolean("isSessionConsumed", false)
         set(value) {
@@ -40,11 +41,12 @@ class WebExtensionActionPopupFragment : AddonPopupBaseFragment(), EngineSession.
         savedInstanceState: Bundle?
     ): View? {
         // Grab the [EngineSession] from the store when the view is created if it is available.
+        binding = FragmentAddOnInternalSettingsBinding.inflate(inflater, container, false)
         coreComponents.store.state.extensions[args.webExtensionId]?.popupSession?.let {
             initializeSession(it)
         }
 
-        return inflater.inflate(R.layout.fragment_add_on_internal_settings, container, false)
+        return binding.root
     }
 
     override fun onResume() {
@@ -60,7 +62,7 @@ class WebExtensionActionPopupFragment : AddonPopupBaseFragment(), EngineSession.
         val session = engineSession
         // If we have the session, render it otherwise consume it from the store.
         if (session != null) {
-            addonSettingsEngineView.render(session)
+            binding.addonSettingsEngineView.render(session)
             consumePopupSession()
         } else {
             consumeFrom(coreComponents.store) { state ->
@@ -68,7 +70,7 @@ class WebExtensionActionPopupFragment : AddonPopupBaseFragment(), EngineSession.
                     val popupSession = extState.popupSession
                     if (popupSession != null) {
                         initializeSession(popupSession)
-                        addonSettingsEngineView.render(popupSession)
+                        binding.addonSettingsEngineView.render(popupSession)
                         popupSession.register(this)
                         consumePopupSession()
                         engineSession = popupSession
