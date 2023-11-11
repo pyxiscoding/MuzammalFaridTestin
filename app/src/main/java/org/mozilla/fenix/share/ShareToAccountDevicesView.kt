@@ -6,8 +6,8 @@ package org.mozilla.fenix.share
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.share_to_account_devices.*
 import mozilla.components.concept.sync.Device
 import org.mozilla.fenix.R
 import org.mozilla.fenix.share.listadapters.AccountDevicesShareAdapter
@@ -35,7 +35,7 @@ class ShareToAccountDevicesView(
         LayoutInflater.from(containerView.context)
             .inflate(R.layout.share_to_account_devices, containerView, true)
 
-        devicesList.adapter = adapter
+        containerView.findViewById<RecyclerView>(R.id.devicesList).adapter = adapter
     }
 
     fun setShareTargets(targets: List<SyncShareOption>) {

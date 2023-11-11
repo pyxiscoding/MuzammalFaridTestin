@@ -14,9 +14,8 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.quicksettings_permissions.view.*
 import org.mozilla.fenix.R
+import org.mozilla.fenix.container.LayoutContainer
 import org.mozilla.fenix.settings.PhoneFeature
 import org.mozilla.fenix.settings.PhoneFeature.AUTOPLAY
 import org.mozilla.fenix.settings.PhoneFeature.CAMERA
@@ -76,27 +75,27 @@ class WebsitePermissionsView(
     @VisibleForTesting
     internal var permissionViews: Map<PhoneFeature, PermissionViewHolder> = EnumMap(
         mapOf(
-            CAMERA to ToggleablePermission(view.cameraLabel, view.cameraStatus),
-            LOCATION to ToggleablePermission(view.locationLabel, view.locationStatus),
+            CAMERA to ToggleablePermission(view.findViewById(R.id.cameraLabel), view.findViewById(R.id.cameraStatus)),
+            LOCATION to ToggleablePermission(view.findViewById(R.id.locationLabel), view.findViewById(R.id.locationStatus)),
             MICROPHONE to ToggleablePermission(
-                view.microphoneLabel,
-                view.microphoneStatus
+                view.findViewById(R.id.microphoneLabel),
+                view.findViewById(R.id.microphoneStatus)
             ),
             NOTIFICATION to ToggleablePermission(
-                view.notificationLabel,
-                view.notificationStatus
+                view.findViewById(R.id.notificationLabel),
+                view.findViewById(R.id.notificationStatus)
             ),
             PERSISTENT_STORAGE to ToggleablePermission(
-                view.persistentStorageLabel,
-                view.persistentStorageStatus
+                view.findViewById(R.id.persistentStorageLabel),
+                view.findViewById(R.id.persistentStorageStatus)
             ),
             MEDIA_KEY_SYSTEM_ACCESS to ToggleablePermission(
-                view.mediaKeySystemAccessLabel,
-                view.mediaKeySystemAccessStatus
+                view.findViewById(R.id.mediaKeySystemAccessLabel),
+                view.findViewById(R.id.mediaKeySystemAccessStatus)
             ),
             AUTOPLAY to SpinnerPermission(
-                view.autoplayLabel,
-                view.autoplayStatus
+                view.findViewById(R.id.autoplayLabel),
+                view.findViewById(R.id.autoplayStatus)
             )
         )
     )

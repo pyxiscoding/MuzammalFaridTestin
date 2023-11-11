@@ -25,8 +25,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.fragment_quick_settings_dialog_sheet.*
-import kotlinx.android.synthetic.main.fragment_quick_settings_dialog_sheet.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.plus
@@ -35,6 +33,7 @@ import org.mozilla.fenix.BuildConfig
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.IntentReceiverActivity
 import org.mozilla.fenix.R
+import org.mozilla.fenix.databinding.FragmentQuickSettingsDialogSheetBinding
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.settings.PhoneFeature
 import com.google.android.material.R as MaterialR
@@ -54,6 +53,7 @@ class QuickSettingsSheetDialogFragment : AppCompatDialogFragment() {
     private lateinit var interactor: QuickSettingsInteractor
     private var tryToRequestPermissions: Boolean = false
     private val args by navArgs<QuickSettingsSheetDialogFragmentArgs>()
+    lateinit var binding: FragmentQuickSettingsDialogSheetBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,7 +62,7 @@ class QuickSettingsSheetDialogFragment : AppCompatDialogFragment() {
     ): View {
         val context = requireContext()
         val components = context.components
-        val rootView = inflateRootView(container)
+        binding = FragmentQuickSettingsDialogSheetBinding.inflate(inflater, container, false)
         quickSettingsStore = QuickSettingsFragmentStore.createStore(
             context = context,
             websiteUrl = args.url,
@@ -96,11 +96,11 @@ class QuickSettingsSheetDialogFragment : AppCompatDialogFragment() {
 
         interactor = QuickSettingsInteractor(quickSettingsController)
 
-        websiteInfoView = WebsiteInfoView(rootView.websiteInfoLayout)
+        websiteInfoView = WebsiteInfoView(binding.websiteInfoLayout)
         websitePermissionsView =
-            WebsitePermissionsView(rootView.websitePermissionsLayout, interactor)
+            WebsitePermissionsView(binding.websitePermissionsLayout, interactor)
 
-        return rootView
+        return binding.root
     }
 
     private fun inflateRootView(container: ViewGroup? = null): View {
@@ -185,7 +185,7 @@ class QuickSettingsSheetDialogFragment : AppCompatDialogFragment() {
         requestCode == REQUEST_CODE_QUICK_SETTINGS_PERMISSIONS && grantResults.all { it == PERMISSION_GRANTED }
 
     private fun showPermissionsView() {
-        websitePermissionsGroup.isVisible = true
+        binding.websitePermissionsGroup.isVisible = true
     }
 
     private fun launchIntentReceiver() {

@@ -8,9 +8,9 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import kotlinx.android.extensions.LayoutContainer
 import mozilla.components.support.ktx.android.content.getColorFromAttr
 import org.mozilla.fenix.R
+import org.mozilla.fenix.container.LayoutContainer
 import org.mozilla.fenix.ext.asActivity
 import org.mozilla.fenix.ext.setToolbarColors
 

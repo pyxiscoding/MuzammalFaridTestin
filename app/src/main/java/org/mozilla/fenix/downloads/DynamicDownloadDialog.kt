@@ -5,18 +5,22 @@
 package org.mozilla.fenix.downloads
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.download_dialog_layout.view.*
+import com.google.android.material.button.MaterialButton
 import mozilla.components.browser.state.state.content.DownloadState
 import mozilla.components.feature.downloads.AbstractFetchDownloadService
 import mozilla.components.feature.downloads.toMegabyteOrKilobyteString
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.metrics.Event
 import org.mozilla.fenix.components.metrics.MetricController
+import org.mozilla.fenix.container.LayoutContainer
 import org.mozilla.fenix.ext.metrics
 import org.mozilla.fenix.ext.settings
 
@@ -42,8 +46,21 @@ class DynamicDownloadDialog(
         get() = container
 
     private val settings = container.context.settings()
+    var download_dialog_title: TextView = TODO()
+    var download_dialog_filename: TextView = TODO()
+    var download_dialog_icon: ImageView = TODO()
+    var download_dialog_action_button: MaterialButton = TODO()
+    var download_dialog_close_button: ImageButton= TODO()
 
     init {
+        val view = LayoutInflater.from(container.context)
+            .inflate(R.layout.download_dialog_layout, container, false)
+
+        download_dialog_title = view.findViewById(R.id.download_dialog_title)
+        download_dialog_filename = view.findViewById(R.id.download_dialog_filename)
+        download_dialog_icon = view.findViewById(R.id.download_dialog_icon)
+        download_dialog_action_button = view.findViewById(R.id.download_dialog_action_button)
+        download_dialog_close_button = view.findViewById(R.id.download_dialog_close_button)
         setupDownloadDialog(view)
     }
 
@@ -70,14 +87,14 @@ class DynamicDownloadDialog(
         }
 
         if (didFail) {
-            view.download_dialog_title.text =
+            download_dialog_title.text =
                 container.context.getString(R.string.mozac_feature_downloads_failed_notification_text2)
 
-            view.download_dialog_icon.setImageResource(
+            download_dialog_icon.setImageResource(
                 mozilla.components.feature.downloads.R.drawable.mozac_feature_download_ic_download_failed
             )
 
-            view.download_dialog_action_button.apply {
+            download_dialog_action_button.apply {
                 text = context.getString(
                     mozilla.components.feature.downloads.R.string.mozac_feature_downloads_button_try_again
                 )
@@ -92,13 +109,13 @@ class DynamicDownloadDialog(
                 R.string.mozac_feature_downloads_completed_notification_text2
             ) + " (${downloadState.contentLength?.toMegabyteOrKilobyteString()})"
 
-            view.download_dialog_title.text = titleText
+            download_dialog_title.text = titleText
 
-            view.download_dialog_icon.setImageResource(
+            download_dialog_icon.setImageResource(
                 mozilla.components.feature.downloads.R.drawable.mozac_feature_download_ic_download_complete
             )
 
-            view.download_dialog_action_button.apply {
+            download_dialog_action_button.apply {
                 text = context.getString(
                     mozilla.components.feature.downloads.R.string.mozac_feature_downloads_button_open
                 )
@@ -121,11 +138,11 @@ class DynamicDownloadDialog(
             }
         }
 
-        view.download_dialog_close_button.setOnClickListener {
+        download_dialog_close_button.setOnClickListener {
             dismiss(view)
         }
 
-        view.download_dialog_filename.text = downloadState.fileName
+        download_dialog_filename.text = downloadState.fileName
     }
 
     fun show() {

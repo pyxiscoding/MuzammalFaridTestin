@@ -13,7 +13,6 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_about_libraries.view.*
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.showToolbar
 import java.nio.charset.Charset
@@ -39,7 +38,7 @@ class AboutLibrariesFragment : Fragment(R.layout.fragment_about_libraries) {
         val appName = getString(R.string.app_name)
         showToolbar(getString(R.string.open_source_licenses_title, appName))
 
-        setupLibrariesListView(view.about_libraries_listview)
+        setupLibrariesListView(view.findViewById<ListView>(R.id.about_libraries_listview))
     }
 
     private fun setupLibrariesListView(listView: ListView) {

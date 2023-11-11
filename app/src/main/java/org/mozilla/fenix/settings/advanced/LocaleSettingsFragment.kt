@@ -11,9 +11,9 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.FrameLayout
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_locale_settings.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.components.lib.state.ext.consumeFrom
 import mozilla.components.support.ktx.android.view.hideKeyboard
@@ -50,7 +50,7 @@ class LocaleSettingsFragment : Fragment() {
                 localeSettingsStore = store
             )
         )
-        localeView = LocaleSettingsView(view.locale_container, interactor)
+        localeView = LocaleSettingsView(view.findViewById<FrameLayout>(R.id.locale_container), interactor)
         return view
     }
 

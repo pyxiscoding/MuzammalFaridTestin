@@ -3,22 +3,24 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 package org.mozilla.fenix.library.history
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import kotlinx.android.synthetic.main.component_history.*
-import kotlinx.android.synthetic.main.component_history.view.*
-import kotlinx.android.synthetic.main.recently_closed_nav_item.*
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.library.LibraryPageView
 import org.mozilla.fenix.library.SelectionInteractor
 import org.mozilla.fenix.theme.ThemeManager
+
 
 /**
  * Interface for the HistoryViewInteractor. This interface is implemented by objects that want
@@ -93,18 +95,31 @@ class HistoryView(
     container: ViewGroup,
     val interactor: HistoryInteractor
 ) : LibraryPageView(container), UserInteractionHandler {
-
-    val view: View = LayoutInflater.from(container.context)
-        .inflate(R.layout.component_history, container, true)
-
     var mode: HistoryFragmentState.Mode = HistoryFragmentState.Mode.Normal
         private set
 
     val historyAdapter = HistoryAdapter(interactor)
     private val layoutManager = LinearLayoutManager(container.context)
+    var history_list : RecyclerView
+    var swipe_refresh : SwipeRefreshLayout
+    var progress_bar : ProgressBar
+    var history_empty_view: TextView
+    var view: View
+    var view2: View
 
     init {
-        view.history_list.apply {
+        view = LayoutInflater.from(context)
+            .inflate(R.layout.component_history,container, false)
+
+        view2 = LayoutInflater.from(context)
+            .inflate(R.layout.recently_closed_nav_item,container, false)
+
+        history_list = view.findViewById(R.id.history_list)
+        swipe_refresh = view.findViewById(R.id.swipe_refresh)
+        progress_bar = view.findViewById(R.id.progress_bar)
+        history_empty_view = view.findViewById(R.id.history_empty_view)
+
+        history_list.apply {
             layoutManager = this@HistoryView.layoutManager
             adapter = historyAdapter
             (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
@@ -112,19 +127,19 @@ class HistoryView(
 
         val primaryTextColor =
             ThemeManager.resolveAttribute(R.attr.primaryText, context)
-        view.swipe_refresh.setColorSchemeColors(primaryTextColor)
-        view.swipe_refresh.setOnRefreshListener {
+        swipe_refresh.setColorSchemeColors(primaryTextColor)
+        swipe_refresh.setOnRefreshListener {
             interactor.onRequestSync()
-            view.history_list.scrollToPosition(0)
+            history_list.scrollToPosition(0)
         }
     }
 
     fun update(state: HistoryFragmentState) {
         val oldMode = mode
 
-        view.progress_bar.isVisible = state.isDeletingItems
-        view.swipe_refresh.isRefreshing = state.mode === HistoryFragmentState.Mode.Syncing
-        view.swipe_refresh.isEnabled =
+        progress_bar.isVisible = state.isDeletingItems
+        swipe_refresh.isRefreshing = state.mode === HistoryFragmentState.Mode.Syncing
+        swipe_refresh.isEnabled =
             state.mode === HistoryFragmentState.Mode.Normal || state.mode === HistoryFragmentState.Mode.Syncing
         mode = state.mode
 
@@ -167,12 +182,12 @@ class HistoryView(
     fun updateEmptyState(userHasHistory: Boolean) {
         history_list.isVisible = userHasHistory
         history_empty_view.isVisible = !userHasHistory
-        recently_closed_nav_empty.apply {
+        view2.findViewById<ConstraintLayout>(R.id.recently_closed_nav).apply {
             setOnClickListener {
                 interactor.onRecentlyClosedClicked()
             }
             val numRecentTabs = view.context.components.core.store.state.closedTabs.size
-            recently_closed_tabs_description.text = String.format(
+            view2.findViewById<TextView>(R.id.recently_closed_tabs_description).text = String.format(
                 view.context.getString(
                     if (numRecentTabs == 1)
                         R.string.recently_closed_tab else R.string.recently_closed_tabs

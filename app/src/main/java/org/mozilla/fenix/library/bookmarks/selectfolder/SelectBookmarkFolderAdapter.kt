@@ -13,9 +13,9 @@ import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
 import mozilla.components.concept.storage.BookmarkNode
 import org.mozilla.fenix.R
+import org.mozilla.fenix.container.LayoutContainer
 import org.mozilla.fenix.library.LibrarySiteItemView
 import org.mozilla.fenix.library.bookmarks.BookmarkNodeWithDepth
 import org.mozilla.fenix.library.bookmarks.BookmarksSharedViewModel

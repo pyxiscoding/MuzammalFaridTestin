@@ -6,10 +6,11 @@ package org.mozilla.fenix.share.viewholders
 
 import android.content.Context
 import android.view.View
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.account_share_list_item.view.*
 import mozilla.components.concept.sync.DeviceType
 import org.mozilla.fenix.R
 import org.mozilla.fenix.share.ShareToAccountDevicesInteractor
@@ -18,7 +19,7 @@ import org.mozilla.fenix.utils.Do
 
 class AccountDeviceViewHolder(
     itemView: View,
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @get:VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val interactor: ShareToAccountDevicesInteractor
 ) : RecyclerView.ViewHolder(itemView) {
 
@@ -48,13 +49,13 @@ class AccountDeviceViewHolder(
     private fun bindView(option: SyncShareOption) {
         val (name, drawableRes, colorRes) = getNameIconBackground(context, option)
 
-        itemView.deviceIcon.apply {
+        itemView.findViewById<ImageButton>(R.id.deviceIcon).apply {
             setImageResource(drawableRes)
             background.setTint(getColor(context, colorRes))
             drawable.setTint(getColor(context, R.color.device_foreground))
         }
         itemView.isClickable = option != SyncShareOption.Offline
-        itemView.deviceName.text = name
+        itemView.findViewById<TextView>(R.id.deviceName).text = name
     }
 
     companion object {

@@ -4,16 +4,27 @@
 
 package org.mozilla.fenix.home.sessioncontrol.viewholders.onboarding
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.onboarding_header.view.*
 import org.mozilla.fenix.R
 
 class OnboardingHeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
+    private var header_text: TextView
+
     init {
-      //  val appName = view.context.getString(R.string.app_name)
-        view.header_text.text = view.context.getString(R.string.onboarding_header)
+
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.onboarding_header, view as ViewGroup, false)
+
+        header_text = view.findViewById(R.id.header_text)
+
+
+        //  val appName = view.context.getString(R.string.app_name)
+        header_text.text = view.context.getString(R.string.onboarding_header)
     }
 
     companion object {

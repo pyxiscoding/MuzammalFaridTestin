@@ -7,10 +7,11 @@ package org.mozilla.fenix.collections
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.graphics.BlendModeColorFilterCompat.createBlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat.SRC_IN
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.collections_list_item.*
 import mozilla.components.feature.tab.collections.TabCollection
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.description
@@ -50,6 +51,10 @@ class SaveCollectionListAdapter(
 }
 
 class CollectionViewHolder(view: View) : ViewHolder(view) {
+
+    val collection_item = view.findViewById<TextView>(R.id.collection_item)
+    val collection_description = view.findViewById<TextView>(R.id.collection_description)
+    val collection_icon = view.findViewById<ImageView>(R.id.collection_icon)
 
     fun bind(collection: TabCollection) {
         collection_item.text = collection.title

@@ -8,11 +8,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.component_sync_tabs.view.*
-import kotlinx.android.synthetic.main.fragment_synced_tabs.*
-import kotlinx.android.synthetic.main.sync_tabs_error_row.view.*
 import mozilla.components.browser.storage.sync.Tab
 import mozilla.components.feature.syncedtabs.SyncedTabsFeature
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
@@ -44,14 +42,14 @@ class SyncedTabsFragment : LibraryPageFragment<Tab>() {
         * Needed because the synced tabs error layout is also used in tabs tray where there is no private theme.
         * See https://github.com/mozilla-mobile/fenix/issues/15061
         */
-        setProperErrorColor(view.synced_tabs_list as RecyclerView)
+        setProperErrorColor(view.findViewById<SyncedTabsLayout>(R.id.synced_tabs_list) as RecyclerView)
 
         syncedTabsFeature.set(
             feature = SyncedTabsFeature(
                 context = requireContext(),
                 storage = backgroundServices.syncedTabsStorage,
                 accountManager = backgroundServices.accountManager,
-                view = synced_tabs_layout,
+                view = view.findViewById<SyncedTabsLayout>(R.id.synced_tabs_layout),
                 lifecycleOwner = this.viewLifecycleOwner,
                 onTabClicked = ::handleTabClicked
             ),
@@ -64,7 +62,7 @@ class SyncedTabsFragment : LibraryPageFragment<Tab>() {
         syncedTabsList.addOnChildAttachStateChangeListener(
             object : RecyclerView.OnChildAttachStateChangeListener {
                 override fun onChildViewAttachedToWindow(view: View) {
-                    val errorView = view.sync_tabs_error_description
+                    val errorView = view.findViewById<TextView>(R.id.sync_tabs_error_description)
                     val primaryText = ContextCompat.getColor(
                         view.context,
                         ThemeManager.resolveAttribute(R.attr.primaryText, view.context)

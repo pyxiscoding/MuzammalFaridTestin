@@ -16,12 +16,12 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.fragment_history.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -102,7 +102,7 @@ class HistoryFragment : LibraryPageFragment<HistoryItem>(), UserInteractionHandl
             historyController
         )
         _historyView = HistoryView(
-            view.historyLayout,
+            view.findViewById<FrameLayout>(R.id.historyLayout),
             historyInteractor
         )
 

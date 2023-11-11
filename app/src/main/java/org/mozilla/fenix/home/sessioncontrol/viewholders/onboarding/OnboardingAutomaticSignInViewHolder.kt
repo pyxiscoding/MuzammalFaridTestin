@@ -4,13 +4,15 @@
 
 package org.mozilla.fenix.home.sessioncontrol.viewholders.onboarding
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.onboarding_automatic_signin.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -28,12 +30,20 @@ class OnboardingAutomaticSignInViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private lateinit var shareableAccount: ShareableAccount
-    private val headerText = view.header_text
+    private val headerText: TextView
+    private val fxa_sign_in_button: Button
 
     init {
-        view.fxa_sign_in_button.setOnClickListener {
+
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.onboarding_automatic_signin, view as ViewGroup, false)
+
+        headerText = view.findViewById(R.id.header_text)
+        fxa_sign_in_button = view.findViewById(R.id.fxa_sign_in_button)
+
+        fxa_sign_in_button.setOnClickListener {
             scope.launch {
-                onClick(it.fxa_sign_in_button)
+                onClick(it.findViewById(R.id.fxa_sign_in_button))
             }
         }
     }

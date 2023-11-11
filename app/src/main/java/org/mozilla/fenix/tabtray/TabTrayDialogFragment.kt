@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
@@ -23,10 +24,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.component_tabstray.view.*
-import kotlinx.android.synthetic.main.component_tabstray_fab.view.*
-import kotlinx.android.synthetic.main.fragment_tab_tray_dialog.*
-import kotlinx.android.synthetic.main.fragment_tab_tray_dialog.view.*
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -82,9 +81,9 @@ class TabTrayDialogFragment : AppCompatDialogFragment(), UserInteractionHandler 
         get() =
             // Fab is hidden when Talkback is activated. See #16592
             if (requireContext().settings().accessibilityServicesEnabled) null
-            else if (tabTrayView.fabView.new_tab_button.isVisible ||
+            else if (tabTrayView.fabView.findViewById<ExtendedFloatingActionButton>(R.id.new_tab_button).isVisible ||
                 tabTrayView.mode != Mode.Normal
-            ) tabTrayView.fabView.new_tab_button
+            ) tabTrayView.fabView.findViewById<ExtendedFloatingActionButton>(R.id.new_tab_button)
             /* During selection of the tabs to the collection, the FAB is not visible,
                which leads to not attaching a needed AnchorView. That's why, we're not only
                checking, if it's not visible, but also if we're not in a "Normal" mode, so after
@@ -194,7 +193,7 @@ class TabTrayDialogFragment : AppCompatDialogFragment(), UserInteractionHandler 
         currentOrientation = resources.configuration.orientation
 
         _tabTrayView = TabTrayView(
-            view.tabLayout,
+            view.findViewById(R.id.tabLayout),
             adapter,
             interactor = TabTrayFragmentInteractor(
                 DefaultTabTrayController(
@@ -243,12 +242,12 @@ class TabTrayDialogFragment : AppCompatDialogFragment(), UserInteractionHandler 
             view = view
         )
 
-        tabLayout.setOnClickListener {
+        view.findViewById<TabLayout>(R.id.tabLayout).setOnClickListener {
             requireContext().components.analytics.metrics.track(Event.TabsTrayClosed)
             dismissAllowingStateLoss()
         }
 
-        view.tabLayout.setOnApplyWindowInsetsListener { v, insets ->
+        view.findViewById<TabLayout>(R.id.tabLayout).setOnApplyWindowInsetsListener { v, insets ->
             // This will be addressed on https://github.com/mozilla-mobile/fenix/issues/17807
             @Suppress("DEPRECATION")
             v.updatePadding(
@@ -259,7 +258,7 @@ class TabTrayDialogFragment : AppCompatDialogFragment(), UserInteractionHandler 
 
             // This will be addressed on https://github.com/mozilla-mobile/fenix/issues/17807
             @Suppress("DEPRECATION")
-            tabTrayView.view.tab_wrapper.updatePadding(
+            tabTrayView.view.findViewById<ConstraintLayout>(R.id.tab_wrapper).updatePadding(
                 bottom = insets.bottom()
             )
 
@@ -285,7 +284,7 @@ class TabTrayDialogFragment : AppCompatDialogFragment(), UserInteractionHandler 
 
     private fun showUndoSnackbarForTabs() {
         lifecycleScope.allowUndo(
-            requireView().tabLayout,
+            requireView().findViewById(R.id.tabLayout),
             getString(R.string.snackbar_message_tabs_closed),
             getString(R.string.snackbar_deleted_undo),
             {
@@ -316,7 +315,7 @@ class TabTrayDialogFragment : AppCompatDialogFragment(), UserInteractionHandler 
         }
 
         lifecycleScope.allowUndo(
-            requireView().tabLayout,
+            requireView().findViewById(R.id.tabLayout),
             snackbarMessage,
             getString(R.string.snackbar_deleted_undo),
             {

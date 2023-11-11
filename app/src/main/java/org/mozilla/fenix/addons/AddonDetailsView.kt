@@ -10,15 +10,16 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.URLSpan
 import android.view.View
+import android.widget.RatingBar
+import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.core.text.HtmlCompat
 import androidx.core.text.getSpans
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.fragment_add_on_details.*
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.ui.translateDescription
 import mozilla.components.feature.addons.ui.updatedAtDate
 import org.mozilla.fenix.R
+import org.mozilla.fenix.container.LayoutContainer
 import java.text.DateFormat
 import java.text.NumberFormat
 import java.util.Locale
@@ -61,21 +62,21 @@ class AddonDetailsView(
             val resources = containerView.resources
             val ratingContentDescription =
                 resources.getString(R.string.mozac_feature_addons_rating_content_description)
-            rating_view.contentDescription = String.format(ratingContentDescription, rating.average)
-            rating_view.rating = rating.average
+            containerView.findViewById<RatingBar>(R.id.rating_view).contentDescription = String.format(ratingContentDescription, rating.average)
+            containerView.findViewById<RatingBar>(R.id.rating_view).rating = rating.average
 
-            users_count.text = numberFormatter.format(rating.reviews)
+            containerView.findViewById<TextView>(R.id.users_count).text = numberFormatter.format(rating.reviews)
         }
     }
 
     private fun bindWebsite(addon: Addon) {
-        home_page_label.setOnClickListener {
+        containerView.findViewById<TextView>(R.id.home_page_label).setOnClickListener {
             interactor.openWebsite(addon.siteUrl.toUri())
         }
     }
 
     private fun bindLastUpdated(addon: Addon) {
-        last_updated_text.text = dateFormatter.format(addon.updatedAtDate)
+        containerView.findViewById<TextView>(R.id.last_updated_text).text = dateFormatter.format(addon.updatedAtDate)
     }
 
     private fun bindVersion(addon: Addon) {
@@ -83,20 +84,20 @@ class AddonDetailsView(
         if (version.isNullOrEmpty()) {
             version = addon.version
         }
-        version_text.text = version
+        containerView.findViewById<TextView>(R.id.version_text).text = version
 
         if (addon.isInstalled()) {
-            version_text.setOnLongClickListener {
+            containerView.findViewById<TextView>(R.id.version_text).setOnLongClickListener {
                 interactor.showUpdaterDialog(addon)
                 true
             }
         } else {
-            version_text.setOnLongClickListener(null)
+            containerView.findViewById<TextView>(R.id.version_text).setOnLongClickListener(null)
         }
     }
 
     private fun bindAuthors(addon: Addon) {
-        author_text.text = addon.authors.joinToString { author -> author.name }.trim()
+        containerView.findViewById<TextView>(R.id.author_text).text = addon.authors.joinToString { author -> author.name }.trim()
     }
 
     private fun bindDetails(addon: Addon) {
@@ -110,8 +111,8 @@ class AddonDetailsView(
         for (link in links) {
             addActionToLinks(spannableStringBuilder, link)
         }
-        details.text = spannableStringBuilder
-        details.movementMethod = LinkMovementMethod.getInstance()
+        containerView.findViewById<TextView>(R.id.details).text = spannableStringBuilder
+        containerView.findViewById<TextView>(R.id.details).movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun addActionToLinks(

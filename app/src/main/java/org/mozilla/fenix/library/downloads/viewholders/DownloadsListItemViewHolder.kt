@@ -4,11 +4,14 @@
 
 package org.mozilla.fenix.library.downloads.viewholders
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.download_list_item.view.*
-import kotlinx.android.synthetic.main.library_site_item.view.*
+import com.google.android.material.button.MaterialButton
 import mozilla.components.feature.downloads.toMegabyteOrKilobyteString
 import org.mozilla.fenix.R
 import org.mozilla.fenix.library.SelectionHolder
@@ -16,6 +19,7 @@ import org.mozilla.fenix.library.downloads.DownloadInteractor
 import org.mozilla.fenix.library.downloads.DownloadItem
 import org.mozilla.fenix.ext.getIcon
 import org.mozilla.fenix.ext.showAndEnable
+import org.mozilla.fenix.library.LibrarySiteItemView
 import org.mozilla.fenix.library.downloads.DownloadFragmentState
 import org.mozilla.fenix.library.downloads.DownloadItemMenu
 
@@ -26,11 +30,29 @@ class DownloadsListItemViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private var item: DownloadItem? = null
+    private var delete_downloads_button : MaterialButton
+    private var download_layout : LibrarySiteItemView
+    private var favicon : ImageView
+    private var overflow_menu : ImageButton
 
     init {
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.download_list_item, view as ViewGroup, false)
+
+        val view2 = LayoutInflater.from(view.context)
+            .inflate(R.layout.library_site_item, view as ViewGroup, false)
+        favicon = view2.findViewById(R.id.favicon)
+        overflow_menu = view2.findViewById(R.id.overflow_menu)
+
+        view.addView(view2);
+
+        delete_downloads_button = view.findViewById(R.id.delete_downloads_button)
+        download_layout = view.findViewById(R.id.download_layout)
+
+
         setupMenu()
 
-        itemView.delete_downloads_button.setOnClickListener {
+        delete_downloads_button.setOnClickListener {
             val selected = selectionHolder.selectedItems
             if (selected.isEmpty()) {
                 downloadInteractor.onDeleteAll()
@@ -45,26 +67,26 @@ class DownloadsListItemViewHolder(
         mode: DownloadFragmentState.Mode,
         isPendingDeletion: Boolean = false
     ) {
-        itemView.download_layout.visibility = if (isPendingDeletion) {
+        download_layout.visibility = if (isPendingDeletion) {
             View.GONE
         } else {
             View.VISIBLE
         }
-        itemView.download_layout.titleView.text = item.fileName
-        itemView.download_layout.urlView.text = item.size.toLong().toMegabyteOrKilobyteString()
+        download_layout.titleView.text = item.fileName
+        download_layout.urlView.text = item.size.toLong().toMegabyteOrKilobyteString()
 
         toggleTopContent(false, mode == DownloadFragmentState.Mode.Normal)
 
-        itemView.download_layout.setSelectionInteractor(item, selectionHolder, downloadInteractor)
-        itemView.download_layout.changeSelected(item in selectionHolder.selectedItems)
+        download_layout.setSelectionInteractor(item, selectionHolder, downloadInteractor)
+        download_layout.changeSelected(item in selectionHolder.selectedItems)
 
-        itemView.favicon.setImageResource(item.getIcon())
+        favicon.setImageResource(item.getIcon())
 
-        itemView.overflow_menu.setImageResource(R.drawable.ic_delete)
+        overflow_menu.setImageResource(R.drawable.ic_delete)
 
-        itemView.overflow_menu.showAndEnable()
+        overflow_menu.showAndEnable()
 
-        itemView.overflow_menu.setOnClickListener {
+        overflow_menu.setOnClickListener {
             downloadInteractor.onDeleteSome(setOf(item))
         }
 
@@ -75,10 +97,10 @@ class DownloadsListItemViewHolder(
         showTopContent: Boolean,
         isNormalMode: Boolean
     ) {
-        itemView.delete_downloads_button.isVisible = showTopContent
+        delete_downloads_button.isVisible = showTopContent
 
         if (showTopContent) {
-            itemView.delete_downloads_button.run {
+            delete_downloads_button.run {
                 if (isNormalMode) {
                     isEnabled = true
                     alpha = 1f
@@ -98,7 +120,7 @@ class DownloadsListItemViewHolder(
                 downloadInteractor.onDeleteSome(setOf(item))
             }
         }
-        itemView.download_layout.attachMenu(downloadMenu.menuController)
+        download_layout.attachMenu(downloadMenu.menuController)
     }
 
     companion object {

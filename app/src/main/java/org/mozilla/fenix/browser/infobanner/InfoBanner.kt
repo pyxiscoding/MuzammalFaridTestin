@@ -9,8 +9,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.VisibleForTesting
-import kotlinx.android.synthetic.main.info_banner.view.*
+import com.google.android.material.button.MaterialButton
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.settings
 
@@ -42,23 +43,23 @@ open class InfoBanner(
         .inflate(R.layout.info_banner, null)
 
     internal open fun showBanner() {
-        bannerLayout.banner_info_message.text = message
-        bannerLayout.dismiss.text = dismissText
+        bannerLayout.findViewById<TextView>(R.id.banner_info_message).text = message
+        bannerLayout.findViewById<MaterialButton>(R.id.dismiss).text = dismissText
 
         if (actionText.isNullOrEmpty()) {
-            bannerLayout.action.visibility = GONE
+            bannerLayout.findViewById<MaterialButton>(R.id.action).visibility = GONE
         } else {
-            bannerLayout.action.text = actionText
+            bannerLayout.findViewById<MaterialButton>(R.id.action).text = actionText
         }
 
         container.addView(bannerLayout)
 
-        bannerLayout.dismiss.setOnClickListener {
+        bannerLayout.findViewById<MaterialButton>(R.id.dismiss).setOnClickListener {
             dismissAction?.invoke()
             if (dismissByHiding) { bannerLayout.visibility = GONE } else { dismiss() }
         }
 
-        bannerLayout.action.setOnClickListener {
+        bannerLayout.findViewById<MaterialButton>(R.id.dismiss).setOnClickListener {
             actionToPerform?.invoke()
         }
 

@@ -6,7 +6,7 @@ package org.mozilla.fenix.utils.view
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
+import org.mozilla.fenix.container.LayoutContainer
 
 /**
  * A base class for all recycler view holders supporting Android Extensions-style view access.

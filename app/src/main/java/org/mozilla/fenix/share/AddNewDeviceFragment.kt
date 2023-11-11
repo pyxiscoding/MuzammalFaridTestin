@@ -5,13 +5,15 @@
 package org.mozilla.fenix.share
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_add_new_device.*
 import org.mozilla.fenix.BrowserDirection
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.R
+import org.mozilla.fenix.databinding.FragmentAddNewDeviceBinding
 import org.mozilla.fenix.ext.showToolbar
 import org.mozilla.fenix.settings.SupportUtils
 
@@ -20,6 +22,17 @@ import org.mozilla.fenix.settings.SupportUtils
  */
 class AddNewDeviceFragment : Fragment(R.layout.fragment_add_new_device) {
 
+    lateinit var binding: FragmentAddNewDeviceBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding  = FragmentAddNewDeviceBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onResume() {
         super.onResume()
         showToolbar(getString(R.string.sync_add_new_device_title))
@@ -27,7 +40,7 @@ class AddNewDeviceFragment : Fragment(R.layout.fragment_add_new_device) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        learn_button.setOnClickListener {
+        binding.learnButton.setOnClickListener {
             (activity as HomeActivity).openToBrowserAndLoad(
                 searchTermOrURL = SupportUtils.getSumoURLForTopic(
                     requireContext(),
@@ -38,7 +51,7 @@ class AddNewDeviceFragment : Fragment(R.layout.fragment_add_new_device) {
             )
         }
 
-        connect_button.setOnClickListener {
+        binding.connectButton.setOnClickListener {
             AlertDialog.Builder(requireContext()).apply {
                 setMessage(R.string.sync_connect_device_dialog)
                 setPositiveButton(R.string.sync_confirmation_button) { dialog, _ -> dialog.cancel() }

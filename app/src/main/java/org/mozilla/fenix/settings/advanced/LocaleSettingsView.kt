@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.component_locale_settings.view.*
+import androidx.recyclerview.widget.RecyclerView
 import org.mozilla.fenix.R
 import java.util.Locale
 
@@ -32,7 +32,7 @@ class LocaleSettingsView(
     private val localeAdapter: LocaleAdapter
 
     init {
-        view.locale_list.apply {
+        view.findViewById<RecyclerView>(R.id.locale_list).apply {
             localeAdapter = LocaleAdapter(interactor)
             adapter = localeAdapter
             layoutManager = LinearLayoutManager(context)

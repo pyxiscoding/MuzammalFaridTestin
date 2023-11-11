@@ -13,10 +13,10 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
-import kotlinx.android.synthetic.main.fragment_downloads.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
@@ -83,7 +83,7 @@ class DownloadFragment : LibraryPageFragment<DownloadItem>(), UserInteractionHan
         downloadInteractor = DownloadInteractor(
             downloadController
         )
-        downloadView = DownloadView(view.downloadsLayout, downloadInteractor)
+        downloadView = DownloadView(view.findViewById<FrameLayout>(R.id.downloadsLayout), downloadInteractor)
 
         return view
     }

@@ -4,30 +4,39 @@
 
 package org.mozilla.fenix.settings.advanced
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.locale_settings_item.*
 import mozilla.components.support.locale.LocaleManager
 import org.mozilla.fenix.R
 import org.mozilla.fenix.utils.view.ViewHolder
 import java.util.Locale
 
 class LocaleViewHolder(
-    view: View,
+    var view: View,
     selectedLocale: Locale,
     private val interactor: LocaleSettingsViewInteractor
 ) : BaseLocaleViewHolder(view, selectedLocale) {
+
+    init {
+        view = LayoutInflater.from(view.context)
+            .inflate(R.layout.locale_settings_item, view as ViewGroup, false)
+
+    }
 
     override fun bind(locale: Locale) {
         if (locale.toString().equals("vec", ignoreCase = true)) {
             locale.toString()
         }
         // Capitalisation is done using the rules of the appropriate locale (endonym and exonym).
-        locale_title_text.text = getDisplayName(locale)
+        view.findViewById<TextView>(R.id.locale_title_text).text = getDisplayName(locale)
         // Show the given locale using the device locale for the subtitle.
-        locale_subtitle_text.text = locale.getProperDisplayName()
-        locale_selected_icon.isVisible = isCurrentLocaleSelected(locale, isDefault = false)
+        view.findViewById<TextView>(R.id.locale_subtitle_text).text = locale.getProperDisplayName()
+        view.findViewById<ImageView>(R.id.locale_selected_icon).isVisible = isCurrentLocaleSelected(locale, isDefault = false)
 
         itemView.setOnClickListener {
             interactor.onLocaleSelected(locale)
@@ -254,10 +263,10 @@ class SystemLocaleViewHolder(
 ) : BaseLocaleViewHolder(view, selectedLocale) {
 
     override fun bind(locale: Locale) {
-        locale_title_text.text = itemView.context.getString(R.string.default_locale_text)
+        itemView.findViewById<TextView>(R.id.locale_title_text).text = itemView.context.getString(R.string.default_locale_text)
         // Use the device locale for the system locale subtitle.
-        locale_subtitle_text.text = locale.getDisplayName(locale).capitalize(locale)
-        locale_selected_icon.isVisible = isCurrentLocaleSelected(locale, isDefault = true)
+        itemView.findViewById<TextView>(R.id.locale_subtitle_text).text = locale.getDisplayName(locale).capitalize(locale)
+        itemView.findViewById<ImageView>(R.id.locale_selected_icon).isVisible = isCurrentLocaleSelected(locale, isDefault = true)
         itemView.setOnClickListener {
             interactor.onDefaultLocaleSelected()
         }

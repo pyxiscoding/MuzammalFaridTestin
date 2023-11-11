@@ -9,12 +9,12 @@ import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.annotation.VisibleForTesting
 import androidx.core.view.isVisible
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.*
 import mozilla.components.browser.state.selector.selectedTab
 import mozilla.components.browser.state.state.CustomTabSessionState
 import mozilla.components.browser.state.store.BrowserStore
@@ -53,13 +53,13 @@ object ToolbarPopupWindow {
         // See: https://github.com/mozilla-mobile/fenix/issues/10027
         popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        customView.copy.isVisible = copyVisible
+        customView.findViewById<Button>(R.id.copy).isVisible = copyVisible
 
-        customView.paste.isVisible = !clipboard.text.isNullOrEmpty() && !isCustomTabSession
-        customView.paste_and_go.isVisible =
+        customView.findViewById<Button>(R.id.paste).isVisible = !clipboard.text.isNullOrEmpty() && !isCustomTabSession
+        customView.findViewById<Button>(R.id.paste_and_go).isVisible =
             !clipboard.text.isNullOrEmpty() && !isCustomTabSession
 
-        customView.copy.setOnClickListener {
+        customView.findViewById<Button>(R.id.copy).setOnClickListener {
             popupWindow.dismiss()
             clipboard.text = getUrlForClipboard(
                 it.context.components.core.store,
@@ -78,12 +78,12 @@ object ToolbarPopupWindow {
             context.components.analytics.metrics.track(Event.CopyUrlUsed)
         }
 
-        customView.paste.setOnClickListener {
+        customView.findViewById<Button>(R.id.paste).setOnClickListener {
             popupWindow.dismiss()
             handlePaste(clipboard.text!!)
         }
 
-        customView.paste_and_go.setOnClickListener {
+        customView.findViewById<Button>(R.id.paste_and_go).setOnClickListener {
             popupWindow.dismiss()
             handlePasteAndGo(clipboard.text!!)
         }

@@ -7,12 +7,12 @@ package org.mozilla.fenix.exceptions
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.component_exceptions.*
 import org.mozilla.fenix.R
+import org.mozilla.fenix.container.LayoutContainer
 
 /**
  * View that contains and configures the Exceptions List
@@ -22,6 +22,9 @@ abstract class ExceptionsView<T : Any>(
     protected val interactor: ExceptionsInteractor<T>
 ) : LayoutContainer {
 
+    var exceptions_learn_more: TextView
+    var exceptions_list : RecyclerView
+     var exceptions_empty_view : TextView
     final override val containerView: FrameLayout = LayoutInflater.from(container.context)
         .inflate(R.layout.component_exceptions, container, true)
         .findViewById(R.id.exceptions_wrapper)
@@ -32,6 +35,10 @@ abstract class ExceptionsView<T : Any>(
         containerView.findViewById<RecyclerView>(R.id.exceptions_list).apply {
             layoutManager = LinearLayoutManager(containerView.context)
         }
+
+        exceptions_list = containerView.findViewById(R.id.exceptions_list)
+        exceptions_empty_view = containerView.findViewById(R.id.exceptions_empty_view)
+        exceptions_learn_more = containerView.findViewById(R.id.exceptions_learn_more)
     }
 
     fun update(items: List<T>) {

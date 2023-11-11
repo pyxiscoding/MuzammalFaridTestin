@@ -8,8 +8,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import kotlinx.android.synthetic.main.component_top_sites.view.*
+import androidx.recyclerview.widget.RecyclerView
 import mozilla.components.feature.top.sites.TopSite
+import org.mozilla.fenix.R
 import org.mozilla.fenix.home.sessioncontrol.AdapterItem
 import org.mozilla.fenix.home.sessioncontrol.TopSiteInteractor
 import org.mozilla.fenix.home.sessioncontrol.viewholders.TopSiteViewHolder
@@ -33,7 +34,7 @@ class TopSitesPagerAdapter(
             onBindViewHolder(holder, position)
         } else {
             if (payloads[0] is AdapterItem.TopSitePagerPayload) {
-                val adapter = holder.itemView.top_sites_list.adapter as TopSitesAdapter
+                val adapter = holder.itemView.findViewById<RecyclerView>(R.id.top_sites_list).adapter as TopSitesAdapter
                 val payload = payloads[0] as AdapterItem.TopSitePagerPayload
                 for (item in payload.changed) {
                     adapter.notifyItemChanged(item.first, item.second)
@@ -43,7 +44,7 @@ class TopSitesPagerAdapter(
     }
 
     override fun onBindViewHolder(holder: TopSiteViewHolder, position: Int) {
-        val adapter = holder.itemView.top_sites_list.adapter as TopSitesAdapter
+        val adapter = holder.itemView.findViewById<RecyclerView>(R.id.top_sites_list).adapter as TopSitesAdapter
         adapter.submitList(getItem(position))
     }
 

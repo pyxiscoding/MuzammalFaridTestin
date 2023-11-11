@@ -7,9 +7,9 @@ package org.mozilla.fenix.trackingprotection
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.withStyledAttributes
-import kotlinx.android.synthetic.main.tracking_protection_category.view.*
 import org.mozilla.fenix.R
 
 class TrackingProtectionCategoryItem @JvmOverloads constructor(
@@ -26,13 +26,13 @@ class TrackingProtectionCategoryItem @JvmOverloads constructor(
             defStyleAttr,
             0
         ) {
-            trackingProtectionCategoryTitle?.text = resources.getString(
+            findViewById<TextView>(R.id.trackingProtectionCategoryTitle)?.text = resources.getString(
                 getResourceId(
                     R.styleable.TrackingProtectionCategory_categoryItemTitle,
                     R.string.etp_cookies_title
                 )
             )
-            trackingProtectionCategoryItemDescription?.text = resources.getString(
+            findViewById<TextView>(R.id.trackingProtectionCategoryItemDescription)?.text = resources.getString(
                 getResourceId(
                     R.styleable.TrackingProtectionCategory_categoryItemDescription,
                     R.string.etp_cookies_description

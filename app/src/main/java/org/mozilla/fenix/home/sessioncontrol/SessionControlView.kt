@@ -4,16 +4,17 @@
 
 package org.mozilla.fenix.home.sessioncontrol
 
+import android.annotation.SuppressLint
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
 import mozilla.components.feature.tab.collections.TabCollection
 import mozilla.components.feature.top.sites.TopSite
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.tips.Tip
+import org.mozilla.fenix.container.LayoutContainer
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.home.HomeFragmentState
 import org.mozilla.fenix.home.HomeScreenViewModel
@@ -68,6 +69,7 @@ private fun showCollections(
 
 private fun privateModeAdapterItems() = listOf(AdapterItem.PrivateBrowsingDescription)
 
+@SuppressLint("StringFormatInvalid")
 private fun onboardingAdapterItems(onboardingState: OnboardingState): List<AdapterItem> {
     val items: MutableList<AdapterItem> = mutableListOf(AdapterItem.OnboardingHeader)
 

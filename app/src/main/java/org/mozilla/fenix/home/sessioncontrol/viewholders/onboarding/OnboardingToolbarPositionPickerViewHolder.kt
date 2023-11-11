@@ -4,9 +4,11 @@
 
 package org.mozilla.fenix.home.sessioncontrol.viewholders.onboarding
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.onboarding_toolbar_position_picker.view.*
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.metrics.Event
 import org.mozilla.fenix.components.metrics.Event.OnboardingToolbarPosition.Position
@@ -20,14 +22,26 @@ class OnboardingToolbarPositionPickerViewHolder(view: View) : RecyclerView.ViewH
 
     private val metrics = view.context.components.analytics.metrics
 
+    val radioTopToolbar : OnboardingRadioButton
+    val radioBottomToolbar : OnboardingRadioButton
+    val radio: OnboardingRadioButton
+    val toolbar_top_image: ImageView
+    val toolbar_bottom_image: ImageView
+
+
     init {
-        val radioTopToolbar = view.toolbar_top_radio_button
-        val radioBottomToolbar = view.toolbar_bottom_radio_button
-        val radio: OnboardingRadioButton
+
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.onboarding_toolbar_position_picker, view as ViewGroup, false)
+
+        radioTopToolbar = view.findViewById(R.id.toolbar_top_radio_button)
+        radioBottomToolbar = view.findViewById(R.id.toolbar_bottom_radio_button)
+        toolbar_top_image = view.findViewById(R.id.toolbar_top_image)
+        toolbar_bottom_image = view.findViewById(R.id.toolbar_bottom_image)
 
         addToRadioGroup(radioTopToolbar, radioBottomToolbar)
-        radioTopToolbar.addIllustration(view.toolbar_top_image)
-        radioBottomToolbar.addIllustration(view.toolbar_bottom_image)
+        radioTopToolbar.addIllustration(toolbar_top_image)
+        radioBottomToolbar.addIllustration(toolbar_bottom_image)
 
         val settings = view.context.components.settings
         radio = when (settings.toolbarPosition) {
@@ -42,7 +56,7 @@ class OnboardingToolbarPositionPickerViewHolder(view: View) : RecyclerView.ViewH
             itemView.context.asActivity()?.recreate()
         }
 
-        view.toolbar_bottom_image.setOnClickListener {
+        toolbar_bottom_image.setOnClickListener {
             metrics.track(Event.OnboardingToolbarPosition(Position.BOTTOM))
 
             radioBottomToolbar.performClick()
@@ -53,7 +67,7 @@ class OnboardingToolbarPositionPickerViewHolder(view: View) : RecyclerView.ViewH
             itemView.context.asActivity()?.recreate()
         }
 
-        view.toolbar_top_image.setOnClickListener {
+        toolbar_top_image.setOnClickListener {
             metrics.track(Event.OnboardingToolbarPosition(Position.TOP))
             radioTopToolbar.performClick()
         }

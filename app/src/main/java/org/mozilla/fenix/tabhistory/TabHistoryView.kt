@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.component_tabhistory.*
 import mozilla.components.browser.state.state.content.HistoryState
 import org.mozilla.fenix.R
 
@@ -45,10 +44,10 @@ class TabHistoryView(
                     // Force expansion of the dialog, otherwise scrolling to the current history item
                     // won't work when its position is near the bottom of the recyclerview.
                     expandDialog.invoke()
-                    val itemView = tabHistoryRecyclerView.findViewHolderForLayoutPosition(
+                    val itemView = containerView.findViewById<RecyclerView>(R.id.tabHistoryRecyclerView).findViewHolderForLayoutPosition(
                         findFirstCompletelyVisibleItemPosition()
                     )?.itemView
-                    val offset = tabHistoryRecyclerView.height / 2 - (itemView?.height ?: 0) / 2
+                    val offset = containerView.findViewById<RecyclerView>(R.id.tabHistoryRecyclerView).height / 2 - (itemView?.height ?: 0) / 2
                     scrollToPositionWithOffset(index, offset)
                     shouldScrollToSelected = false
                 }
@@ -61,8 +60,8 @@ class TabHistoryView(
     private var currentIndex: Int? = null
 
     init {
-        tabHistoryRecyclerView.adapter = adapter
-        tabHistoryRecyclerView.layoutManager = layoutManager
+        containerView.findViewById<RecyclerView>(R.id.tabHistoryRecyclerView).adapter = adapter
+        containerView.findViewById<RecyclerView>(R.id.tabHistoryRecyclerView).layoutManager = layoutManager
     }
 
     fun updateState(historyState: HistoryState) {

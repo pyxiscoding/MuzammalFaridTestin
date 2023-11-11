@@ -9,17 +9,20 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.ContentFrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updatePadding
 import androidx.core.widget.TextViewCompat
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.ContentViewCallback
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fenix_snackbar.view.*
 import org.mozilla.fenix.R
+import org.mozilla.fenix.collections.CollectionViewHolder
 import org.mozilla.fenix.ext.increaseTapArea
 import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.utils.Mockable
@@ -32,15 +35,27 @@ class FenixSnackbar private constructor(
     isError: Boolean
 ) : BaseTransientBottomBar<FenixSnackbar>(parent, content, contentViewCallback) {
 
+     var snackbar_layout: ConstraintLayout
+     var snackbar_text: TextView
+     var snackbar_btn: Button
+
     init {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.fenix_snackbar, parent, false)
+
+        snackbar_btn  = view.findViewById<Button>(R.id.snackbar_btn)
+         snackbar_text = view.findViewById<TextView>(R.id.snackbar_text)
+        snackbar_layout= view.findViewById(R.id.snackbar_layout)
+
+
         view.setBackgroundColor(Color.TRANSPARENT)
 
         setAppropriateBackground(isError)
 
-        content.snackbar_btn.increaseTapArea(actionButtonIncreaseDps)
+        snackbar_btn.increaseTapArea(actionButtonIncreaseDps)
 
         TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
-            content.snackbar_text,
+            snackbar_text,
             minTextSize,
             maxTextSize,
             stepGranularity,
@@ -49,7 +64,7 @@ class FenixSnackbar private constructor(
     }
 
     fun setAppropriateBackground(isError: Boolean) {
-        view.snackbar_layout.background = if (isError) {
+        snackbar_layout.background = if (isError) {
             AppCompatResources.getDrawable(context, R.drawable.fenix_snackbar_error_background)
         } else {
             AppCompatResources.getDrawable(context, R.drawable.fenix_snackbar_background)
@@ -57,7 +72,7 @@ class FenixSnackbar private constructor(
     }
 
     fun setText(text: String) = this.apply {
-        view.snackbar_text.text = text
+        snackbar_text.text = text
     }
 
     fun setLength(duration: Int) = this.apply {
@@ -65,7 +80,7 @@ class FenixSnackbar private constructor(
     }
 
     fun setAction(text: String, action: () -> Unit) = this.apply {
-        view.snackbar_btn.apply {
+        snackbar_btn.apply {
             setText(text)
             visibility = View.VISIBLE
             setOnClickListener {

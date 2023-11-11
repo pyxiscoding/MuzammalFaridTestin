@@ -7,12 +7,14 @@ package org.mozilla.fenix.collections
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.collection_tab_list_row.*
 import org.mozilla.fenix.R
 import org.mozilla.fenix.databinding.CollectionTabListRowBinding
 import org.mozilla.fenix.ext.components
@@ -43,11 +45,11 @@ class CollectionCreationTabListAdapter(
                 is CheckChanged -> {
                     val checkChanged = payloads[0] as CheckChanged
                     if (checkChanged.shouldBeChecked) {
-                        holder.tab_selected_checkbox.isChecked = true
+                        binding.tabSelectedCheckbox.isChecked = true
                     } else if (checkChanged.shouldBeUnchecked) {
-                        holder.tab_selected_checkbox.isChecked = false
+                        binding.tabSelectedCheckbox.isChecked = false
                     }
-                    holder.tab_selected_checkbox.isGone = checkChanged.shouldHideCheckBox
+                    binding.tabSelectedCheckbox.isGone = checkChanged.shouldHideCheckBox
                 }
             }
         }
@@ -56,7 +58,7 @@ class CollectionCreationTabListAdapter(
     override fun onBindViewHolder(holder: TabViewHolder, position: Int) {
         val tab = tabs[position]
         val isSelected = selectedTabs.contains(tab)
-        holder.tab_selected_checkbox.setOnCheckedChangeListener { _, isChecked ->
+        binding.tabSelectedCheckbox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 selectedTabs.add(tab)
                 interactor.addTabToSelection(tab)
@@ -91,6 +93,11 @@ class CollectionCreationTabListAdapter(
 }
 
 class TabViewHolder(view: View) : ViewHolder(view) {
+
+    val hostname = view.findViewById<TextView>(R.id.hostname)
+    val tab_title = view.findViewById<TextView>(R.id.tab_title)
+    val tab_selected_checkbox = view.findViewById<CheckBox>(R.id.tab_selected_checkbox)
+    val favicon_image = view.findViewById<ImageView>(R.id.favicon_image)
 
     init {
         view.findViewById<CardView>(R.id.collection_item_tab).setOnClickListener {

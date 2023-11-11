@@ -7,12 +7,13 @@ package org.mozilla.fenix.settings.quicksettings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isVisible
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.quicksettings_website_info.*
 import mozilla.components.support.ktx.android.content.getDrawableWithTint
 import org.mozilla.fenix.R
+import org.mozilla.fenix.container.LayoutContainer
 
 /**
  * MVI View that knows to display a whether the current website uses a secure connection or not.
@@ -41,23 +42,23 @@ class WebsiteInfoView(
     }
 
     private fun bindUrl(websiteUrl: String) {
-        url.text = websiteUrl
+        containerView.findViewById<TextView>(R.id.url).text = websiteUrl
     }
 
     private fun bindTitle(websiteTitle: String) {
-        title.text = websiteTitle
+        containerView.findViewById<TextView>(R.id.title).text = websiteTitle
     }
 
     private fun bindCertificateName(cert: String) {
         val certificateLabel = containerView.context.getString(R.string.certificate_info_verified_by, cert)
-        certificateInfo.text = certificateLabel
-        certificateInfo.isVisible = cert.isNotEmpty()
+        containerView.findViewById<TextView>(R.id.certificateInfo).text = certificateLabel
+        containerView.findViewById<TextView>(R.id.certificateInfo).isVisible = cert.isNotEmpty()
     }
 
     private fun bindSecurityInfo(uiValues: WebsiteSecurityUiValues) {
         val tint = getColor(containerView.context, uiValues.iconTintRes)
-        securityInfo.setText(uiValues.securityInfoRes)
-        securityInfoIcon.setImageDrawable(
+        containerView.findViewById<TextView>(R.id.securityInfo).setText(uiValues.securityInfoRes)
+        containerView.findViewById<ImageView>(R.id.securityInfoIcon).setImageDrawable(
             containerView.context.getDrawableWithTint(uiValues.iconRes, tint)
         )
     }

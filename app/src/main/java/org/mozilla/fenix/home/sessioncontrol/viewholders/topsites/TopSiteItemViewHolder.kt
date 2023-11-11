@@ -12,16 +12,19 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.PopupWindow
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.drawable.toBitmap
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.library_site_item.*
-import kotlinx.android.synthetic.main.top_site_item.*
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
 import mozilla.components.feature.top.sites.TopSite
@@ -40,8 +43,23 @@ class TopSiteItemViewHolder(
         private val interactor: TopSiteInteractor
 ) : ViewHolder(view) {
     private lateinit var topSite: TopSite
+    private var top_site_item: ConstraintLayout
+    private var top_site_title: TextView
+    private var pin_indicator: FrameLayout
+    private var favicon_image: ImageView
+
+
 
     init {
+        val view3 = LayoutInflater.from(view.context)
+            .inflate(R.layout.top_site_item, view as ViewGroup, false)
+
+        top_site_item = view3.findViewById(R.id.top_site_item)
+        top_site_title = view3.findViewById(R.id.top_site_title)
+        pin_indicator = view3.findViewById(R.id.pin_indicator)
+        favicon_image = view3.findViewById(R.id.favicon_image)
+
+
         top_site_item.setOnClickListener {
             interactor.onSelectTopSite(topSite.url, topSite.type)
         }

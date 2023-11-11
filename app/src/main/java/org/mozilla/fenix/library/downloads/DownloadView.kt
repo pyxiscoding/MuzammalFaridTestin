@@ -7,13 +7,12 @@ package org.mozilla.fenix.library.downloads
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import kotlinx.android.synthetic.main.component_downloads.*
-import kotlinx.android.synthetic.main.component_downloads.view.*
-import kotlinx.android.synthetic.main.component_history.view.progress_bar
-import kotlinx.android.synthetic.main.component_history.view.swipe_refresh
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.fenix.R
 import org.mozilla.fenix.library.LibraryPageView
@@ -65,7 +64,7 @@ class DownloadView(
     private val layoutManager = LinearLayoutManager(container.context)
 
     init {
-        view.download_list.apply {
+        view.findViewById<RecyclerView>(R.id.download_list).apply {
             layoutManager = this@DownloadView.layoutManager
             adapter = downloadAdapter
             (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
@@ -75,8 +74,8 @@ class DownloadView(
     fun update(state: DownloadFragmentState) {
         val oldMode = mode
 
-        view.progress_bar.isVisible = state.isDeletingItems
-        view.swipe_refresh.isEnabled = false
+        view.findViewById<ProgressBar>(R.id.progress_bar).isVisible = state.isDeletingItems
+        view.findViewById<ProgressBar>(R.id.swipe_refresh).isEnabled = false
         mode = state.mode
 
         downloadAdapter.updatePendingDeletionIds(state.pendingDeletionIds)
@@ -111,10 +110,10 @@ class DownloadView(
     }
 
     fun updateEmptyState(userHasDownloads: Boolean) {
-        download_list.isVisible = userHasDownloads
-        download_empty_view.isVisible = !userHasDownloads
+        view.findViewById<RecyclerView>(R.id.download_list).isVisible = userHasDownloads
+        view.findViewById<TextView>(R.id.download_empty_view).isVisible = !userHasDownloads
         if (!userHasDownloads) {
-            download_empty_view.announceForAccessibility(context.getString(R.string.download_empty_message_1))
+            view.findViewById<TextView>(R.id.download_empty_view).announceForAccessibility(context.getString(R.string.download_empty_message_1))
         }
     }
     override fun onBackPressed(): Boolean {

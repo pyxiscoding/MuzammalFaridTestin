@@ -8,12 +8,13 @@ import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.Px
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.migration_list_item.view.*
 import mozilla.components.support.migration.Migration
 import mozilla.components.support.migration.MigrationResults
 import org.mozilla.fenix.R
@@ -61,8 +62,8 @@ internal class MigrationStatusAdapter :
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val context = view.context
-        private val title = view.migration_item_name
-        private val status = view.migration_status_image
+        private val title = view.findViewById<TextView>(R.id.migration_item_name)
+        private val status = view.findViewById<ImageView>(R.id.migration_status_image)
 
         fun bind(item: MigrationItem) {
             // Get the resource ID for the item.

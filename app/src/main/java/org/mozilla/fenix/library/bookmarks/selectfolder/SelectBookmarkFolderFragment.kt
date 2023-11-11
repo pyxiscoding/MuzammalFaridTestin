@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import kotlinx.android.synthetic.main.fragment_select_bookmark_folder.*
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -33,6 +33,7 @@ class SelectBookmarkFolderFragment : Fragment() {
 
     private val sharedViewModel: BookmarksSharedViewModel by activityViewModels()
     private var bookmarkNode: BookmarkNode? = null
+    lateinit var view: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +41,8 @@ class SelectBookmarkFolderFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_select_bookmark_folder, container, false)
+        view = inflater.inflate(R.layout.fragment_select_bookmark_folder, container, false)
+        return view
     }
 
     override fun onResume() {
@@ -57,7 +59,7 @@ class SelectBookmarkFolderFragment : Fragment() {
                     ?.let { DesktopFolders(context, showMobileRoot = true).withOptionalDesktopFolders(it) }
             }
             val adapter = SelectBookmarkFolderAdapter(sharedViewModel)
-            recylerViewBookmarkFolders.adapter = adapter
+            view.findViewById<RecyclerView>(R.id.recylerViewBookmarkFolders).adapter = adapter
             adapter.updateData(bookmarkNode, args.hideFolderGuid)
         }
     }

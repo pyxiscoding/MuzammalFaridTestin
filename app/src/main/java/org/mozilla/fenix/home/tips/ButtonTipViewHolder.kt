@@ -4,9 +4,13 @@
 
 package org.mozilla.fenix.home.tips
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.button_tip_item.*
 import org.mozilla.fenix.BrowserDirection
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.R
@@ -28,6 +32,23 @@ class ButtonTipViewHolder(
 ) : ViewHolder(view) {
 
     var tip: Tip? = null
+    var tip_header_text: TextView
+    var tip_description_text: TextView
+    var tip_learn_more: TextView
+    var tip_button: Button
+    var tip_close: ImageView
+
+    init {
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.button_tip_item, view as ViewGroup, false)
+
+        tip_header_text = view.findViewById(R.id.tip_header_text)
+        tip_description_text = view.findViewById(R.id.tip_description_text)
+        tip_button = view.findViewById(R.id.tip_button)
+        tip_learn_more = view.findViewById(R.id.tip_learn_more)
+        tip_close = view.findViewById(R.id.tip_close)
+
+    }
 
     fun bind(tip: Tip) {
         require(tip.type is TipType.Button)

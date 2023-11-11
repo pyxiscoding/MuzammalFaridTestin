@@ -4,9 +4,11 @@
 
 package org.mozilla.fenix.exceptions.login
 
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.component_exceptions.*
 import mozilla.components.feature.logins.exceptions.LoginException
 import org.mozilla.fenix.R
 import org.mozilla.fenix.exceptions.ExceptionsView
@@ -19,9 +21,14 @@ class LoginExceptionsView(
     override val exceptionsAdapter = LoginExceptionsAdapter(interactor)
 
     init {
+        val view = LayoutInflater.from(container.context)
+            .inflate(R.layout.component_exceptions, container, false)
+
+        val exceptions_learn_more = view.findViewById<TextView>(R.id.exceptions_learn_more)
+        val exceptions_empty_message = view.findViewById<TextView>(R.id.exceptions_empty_message)
         exceptions_learn_more.isVisible = false
         exceptions_empty_message.text =
-            containerView.context.getString(R.string.preferences_passwords_exceptions_description_empty)
+            containerView?.context?.getString(R.string.preferences_passwords_exceptions_description_empty)
         exceptions_list.apply {
             adapter = exceptionsAdapter
         }

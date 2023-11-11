@@ -6,14 +6,16 @@ package org.mozilla.fenix.library.recentlyclosed
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.component_recently_closed.*
+import androidx.recyclerview.widget.RecyclerView
 import mozilla.components.browser.state.state.recover.RecoverableTab
 import org.mozilla.fenix.R
+import org.mozilla.fenix.container.LayoutContainer
+import org.mozilla.fenix.library.LibrarySiteItemView
 
 interface RecentlyClosedInteractor {
     /**
@@ -72,13 +74,27 @@ class RecentlyClosedFragmentView(
     private val interactor: RecentlyClosedFragmentInteractor
 ) : LayoutContainer {
 
+    private var recently_closed_list: RecyclerView
+    private var view_more_history: RecyclerView
+    private var titleView: TextView
+    private var recently_closed_empty_view: TextView
+    private val containerView2: LibrarySiteItemView
+
     override val containerView: ConstraintLayout = LayoutInflater.from(container.context)
         .inflate(R.layout.component_recently_closed, container, true)
         .findViewById(R.id.recently_closed_wrapper)
 
+
+
     private val recentlyClosedAdapter: RecentlyClosedAdapter = RecentlyClosedAdapter(interactor)
 
     init {
+        containerView2 = LibrarySiteItemView(container.context)
+        recently_closed_list = containerView.findViewById(R.id.recently_closed_list)
+        view_more_history = containerView.findViewById(R.id.view_more_history)
+        titleView = containerView.findViewById(R.id.titleView)
+        recently_closed_empty_view = containerView.findViewById(R.id.recently_closed_empty_view)
+
         recently_closed_list.apply {
             layoutManager = LinearLayoutManager(containerView.context)
             adapter = recentlyClosedAdapter
@@ -87,10 +103,10 @@ class RecentlyClosedFragmentView(
         view_more_history.apply {
             titleView.text =
                 containerView.context.getString(R.string.recently_closed_show_full_history)
-            urlView.isVisible = false
-            overflowView.isVisible = false
-            iconView.background = null
-            iconView.setImageDrawable(
+            containerView2.urlView.isVisible = false
+            containerView2.overflowView.isVisible = false
+            containerView2.iconView.background = null
+            containerView2.iconView.setImageDrawable(
                 AppCompatResources.getDrawable(
                     containerView.context,
                     R.drawable.ic_history

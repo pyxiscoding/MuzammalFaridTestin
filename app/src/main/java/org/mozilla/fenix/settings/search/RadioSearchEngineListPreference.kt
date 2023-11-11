@@ -16,8 +16,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -25,10 +29,6 @@ import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
-import kotlinx.android.synthetic.main.search_engine_radio_button.view.engine_icon
-import kotlinx.android.synthetic.main.search_engine_radio_button.view.engine_text
-import kotlinx.android.synthetic.main.search_engine_radio_button.view.overflow_menu
-import kotlinx.android.synthetic.main.search_engine_radio_button.view.radio_button
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
@@ -109,13 +109,13 @@ class RadioSearchEngineListPreference @JvmOverloads constructor(
         val isCustomSearchEngine = engine.type == SearchEngine.Type.CUSTOM
 
         val wrapper = layoutInflater.inflate(itemResId, null) as LinearLayout
-        wrapper.setOnClickListener { wrapper.radio_button.isChecked = true }
-        wrapper.radio_button.tag = engine.id
-        wrapper.radio_button.isChecked = isSelected
-        wrapper.radio_button.setOnCheckedChangeListener(this)
-        wrapper.engine_text.text = engine.name
-        wrapper.overflow_menu.isVisible = false
-        wrapper.overflow_menu.setOnClickListener {
+        wrapper.setOnClickListener { wrapper.findViewById<RadioButton>(R.id.radio_button).isChecked = true }
+        wrapper.findViewById<RadioButton>(R.id.radio_button).tag = engine.id
+        wrapper.findViewById<RadioButton>(R.id.radio_button).isChecked = isSelected
+        wrapper.findViewById<RadioButton>(R.id.radio_button).setOnCheckedChangeListener(this)
+        wrapper.findViewById<TextView>(R.id.engine_text).text = engine.name
+        wrapper.findViewById<ImageButton>(R.id.overflow_menu).isVisible = false
+        wrapper.findViewById<ImageButton>(R.id.overflow_menu).setOnClickListener {
             SearchEngineMenu(
                     context = context,
                     allowDeletion = allowDeletion,
@@ -130,7 +130,7 @@ class RadioSearchEngineListPreference @JvmOverloads constructor(
                             )
                         }
                     }
-            ).menuBuilder.build(context).show(wrapper.overflow_menu)
+            ).menuBuilder.build(context).show(wrapper.findViewById<ImageButton>(R.id.overflow_menu))
         }
         val iconSize = res.getDimension(R.dimen.preference_icon_drawable_size).toInt()
 
@@ -154,7 +154,7 @@ class RadioSearchEngineListPreference @JvmOverloads constructor(
 
         val engineIcon = BitmapDrawable(res, scaledIcon)
         engineIcon.setBounds(0, 0, iconSize, iconSize)
-        wrapper.engine_icon.setImageDrawable(engineIcon)
+        wrapper.findViewById<ImageView>(R.id.engine_icon).setImageDrawable(engineIcon)
         return wrapper
     }
 

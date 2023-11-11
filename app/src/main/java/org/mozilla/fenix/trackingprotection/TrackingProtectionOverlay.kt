@@ -13,13 +13,13 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.VisibleForTesting
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.core.view.marginTop
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.android.synthetic.main.tracking_protection_onboarding_popup.*
-import kotlinx.android.synthetic.main.tracking_protection_onboarding_popup.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -126,10 +126,10 @@ class TrackingProtectionOverlay(
         val layout = LayoutInflater.from(context)
             .inflate(R.layout.tracking_protection_onboarding_popup, null)
 
-        layout.drop_down_triangle.isVisible = toolbarPosition == ToolbarPosition.TOP
-        layout.pop_up_triangle.isVisible = toolbarPosition == ToolbarPosition.BOTTOM
+        layout.findViewById<ImageView>(R.id.drop_down_triangle).isVisible = toolbarPosition == ToolbarPosition.TOP
+        layout.findViewById<ImageView>(R.id.pop_up_triangle).isVisible = toolbarPosition == ToolbarPosition.BOTTOM
 
-        layout.onboarding_message.text =
+        layout.findViewById<TextView>(R.id.onboarding_message).text =
             context.getString(
                 R.string.etp_onboarding_cfr_message,
                 context.getString(R.string.app_name)
@@ -174,7 +174,7 @@ class TrackingProtectionOverlay(
 
         val etpShield =
             getToolbar().findViewById<View>(R.id.mozac_browser_toolbar_tracking_protection_indicator)
-        trackingOnboardingDialog.message.setOnClickListener {
+        trackingOnboardingDialog.findViewById<ConstraintLayout>(R.id.message).setOnClickListener {
             metrics.track(Event.ContextualHintETPInsideTap)
             trackingOnboardingDialog.dismiss()
             etpShield.performClick()

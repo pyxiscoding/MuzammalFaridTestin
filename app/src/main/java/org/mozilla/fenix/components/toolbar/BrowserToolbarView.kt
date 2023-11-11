@@ -17,7 +17,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import kotlinx.android.extensions.LayoutContainer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
 import mozilla.components.browser.state.selector.selectedTab
@@ -29,6 +28,7 @@ import mozilla.components.browser.toolbar.display.DisplayToolbar
 import mozilla.components.support.utils.URLStringUtils
 import mozilla.components.ui.tabcounter.TabCounterMenu
 import org.mozilla.fenix.R
+import org.mozilla.fenix.container.LayoutContainer
 import org.mozilla.fenix.customtabs.CustomTabToolbarIntegration
 import org.mozilla.fenix.customtabs.CustomTabToolbarMenu
 import org.mozilla.fenix.ext.bookmarkStorage

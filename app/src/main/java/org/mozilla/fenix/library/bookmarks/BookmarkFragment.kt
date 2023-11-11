@@ -21,9 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import kotlinx.android.synthetic.main.component_bookmark.*
-import kotlinx.android.synthetic.main.component_bookmark.view.*
-import kotlinx.android.synthetic.main.fragment_bookmark.view.*
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -102,8 +100,8 @@ class BookmarkFragment : LibraryPageFragment<BookmarkNode>(), UserInteractionHan
             metrics = metrics!!
         )
 
-        bookmarkView = BookmarkView(view.bookmarkLayout, bookmarkInteractor, findNavController())
-        bookmarkView.view.bookmark_folders_sign_in.visibility = View.GONE
+        bookmarkView = BookmarkView(view.findViewById(R.id.bookmarkLayout), bookmarkInteractor, findNavController())
+        bookmarkView.view.findViewById<MaterialButton>(R.id.bookmark_folders_sign_in).visibility = View.GONE
 
         viewLifecycleOwner.lifecycle.addObserver(
             BookmarkDeselectNavigationListener(
@@ -137,9 +135,9 @@ class BookmarkFragment : LibraryPageFragment<BookmarkNode>(), UserInteractionHan
             // Don't want to pester user too much with it, and if there are lots of bookmarks present,
             // it'll just get visually lost. Inside of the "Desktop Bookmarks" node, it'll nicely stand-out,
             // since there are always only three other items in there. It's also the right place contextually.
-            bookmarkView.view.bookmark_folders_sign_in.isVisible =
+            bookmarkView.view.findViewById<MaterialButton>(R.id.bookmark_folders_sign_in).isVisible =
                 it.tree?.guid == BookmarkRoot.Root.id && accountManager.authenticatedAccount() == null
-            bookmarkView.bookmark_folders_sign_in.visibility = View.GONE
+            bookmarkView.view.findViewById<MaterialButton>(R.id.bookmark_folders_sign_in).visibility = View.GONE
         }
     }
 

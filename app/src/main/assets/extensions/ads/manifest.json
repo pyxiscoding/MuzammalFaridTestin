@@ -6,7 +6,7 @@
     }
   },
   "name": "Mozilla Android Components - Ads",
-  "version": "74.0.20210319190549.1107200647",
+  "version": "74.0.20210319190549.1111101034",
   "content_scripts": [
     {
       "matches": ["https://*/*"],

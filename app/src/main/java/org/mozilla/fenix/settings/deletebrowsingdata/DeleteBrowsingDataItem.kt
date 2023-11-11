@@ -8,12 +8,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.withStyledAttributes
-import kotlinx.android.synthetic.main.delete_browsing_data_item.view.checkbox
-import kotlinx.android.synthetic.main.delete_browsing_data_item.view.subtitle
-import kotlinx.android.synthetic.main.delete_browsing_data_item.view.title
 import org.mozilla.fenix.R
 
 class DeleteBrowsingDataItem @JvmOverloads constructor(
@@ -28,10 +26,13 @@ class DeleteBrowsingDataItem @JvmOverloads constructor(
     }
 
     val titleView: TextView
-        get() = title
+        get() = findViewById(R.id.title)
 
     val subtitleView: TextView
-        get() = subtitle
+        get() = findViewById(R.id.subtitle)
+
+    val checkbox: CheckBox
+        get() = findViewById(R.id.checkbox)
 
     var isChecked: Boolean
         get() = checkbox.isChecked
@@ -60,10 +61,10 @@ class DeleteBrowsingDataItem @JvmOverloads constructor(
                 R.string.empty_string
             )
 
-            title.text = resources.getString(titleId)
+            findViewById<TextView>(R.id.title).text = resources.getString(titleId)
             val subtitleText = resources.getString(subtitleId)
-            subtitle.text = subtitleText
-            if (subtitleText.isBlank()) subtitle.visibility = View.GONE
+            findViewById<TextView>(R.id.subtitle).text = subtitleText
+            if (subtitleText.isBlank()) findViewById<TextView>(R.id.subtitle).visibility = View.GONE
         }
     }
 

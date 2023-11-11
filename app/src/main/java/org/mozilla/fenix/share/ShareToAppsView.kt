@@ -7,8 +7,10 @@ package org.mozilla.fenix.share
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.share_to_apps.*
 import org.mozilla.fenix.R
 import org.mozilla.fenix.share.listadapters.AppShareAdapter
 import org.mozilla.fenix.share.listadapters.AppShareOption
@@ -32,25 +34,25 @@ class ShareToAppsView(
         LayoutInflater.from(containerView.context)
             .inflate(R.layout.share_to_apps, containerView, true)
 
-        appsList.adapter = adapter
-        recentAppsList.adapter = recentAdapter
+        containerView.findViewById<RecyclerView>(R.id.appsList).adapter = adapter
+        containerView.findViewById<RecyclerView>(R.id.recentAppsList).adapter = recentAdapter
     }
 
     fun setShareTargets(targets: List<AppShareOption>) {
-        progressBar.visibility = View.GONE
+        containerView.findViewById<ProgressBar>(R.id.progressBar).visibility = View.GONE
 
-        appsList.visibility = View.VISIBLE
+        containerView.findViewById<RecyclerView>(R.id.appsList).visibility = View.VISIBLE
         adapter.submitList(targets)
     }
 
     fun setRecentShareTargets(recentTargets: List<AppShareOption>) {
         if (recentTargets.isEmpty()) {
-            recentAppsContainer.visibility = View.GONE
+            containerView.findViewById<LinearLayout>(R.id.recentAppsContainer).visibility = View.GONE
             return
         }
-        progressBar.visibility = View.GONE
+        containerView.findViewById<ProgressBar>(R.id.progressBar).visibility = View.GONE
 
-        recentAppsContainer.visibility = View.VISIBLE
+        containerView.findViewById<LinearLayout>(R.id.recentAppsContainer).visibility = View.VISIBLE
         recentAdapter.submitList(recentTargets)
     }
 }

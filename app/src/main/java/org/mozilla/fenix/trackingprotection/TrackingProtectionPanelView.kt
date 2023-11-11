@@ -12,6 +12,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
+import android.widget.ImageView
+import android.widget.Switch
+import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -22,10 +26,6 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.component_tracking_protection_panel.*
-import kotlinx.android.synthetic.main.component_tracking_protection_panel.details_blocking_header
-import kotlinx.android.synthetic.main.library_site_item.view.*
-import kotlinx.android.synthetic.main.switch_with_description.view.*
 import mozilla.components.browser.state.state.CustomTabSessionState
 import mozilla.components.support.ktx.android.net.hostWithoutCommonPrefixes
 import org.mozilla.fenix.R
@@ -88,10 +88,10 @@ class TrackingProtectionPanelView(
     private var shouldFocusAccessibilityView: Boolean = true
 
     init {
-        protection_settings.setOnClickListener {
+        view.findViewById<TextView>(R.id.protection_settings).setOnClickListener {
             interactor.selectTrackingProtectionSettings()
         }
-        details_back.setOnClickListener {
+        view.findViewById<ImageView>(R.id.details_back).setOnClickListener {
             interactor.onBackPressed()
         }
         setCategoryClickListeners()
@@ -131,15 +131,15 @@ class TrackingProtectionPanelView(
             )
         }
 
-        setAccessibilityViewHierarchy(details_back, category_title)
+        setAccessibilityViewHierarchy(view.findViewById(R.id.details_back), view.findViewById(R.id.category_title))
     }
 
     private fun setUIForNormalMode(state: TrackingProtectionState) {
-        details_mode.visibility = View.GONE
-        normal_mode.visibility = View.VISIBLE
-        protection_settings.isGone = state.tab is CustomTabSessionState
+        view.findViewById<ConstraintLayout>(R.id.details_mode).visibility = View.GONE
+        view.findViewById<ConstraintLayout>(R.id.normal_mode).visibility = View.VISIBLE
+        view.findViewById<TextView>(R.id.protection_settings).isGone = state.tab is CustomTabSessionState
 
-        not_blocking_header.isGone = bucketedTrackers.loadedIsEmpty()
+        view.findViewById<TextView>(R.id.not_blocking_header).isGone = bucketedTrackers.loadedIsEmpty()
         bindUrl(state.url)
         bindTrackingProtectionInfo(state.isTrackingProtectionEnabled)
 
@@ -154,19 +154,19 @@ class TrackingProtectionPanelView(
         category: TrackingProtectionCategory,
         categoryBlocked: Boolean
     ) {
-        normal_mode.visibility = View.GONE
-        details_mode.visibility = View.VISIBLE
-        category_title.setText(category.title)
-        blocking_text_list.text = bucketedTrackers.get(category, categoryBlocked).joinToString("\n")
-        category_description.setText(category.description)
-        details_blocking_header.setText(if (categoryBlocked) {
+        view.findViewById<ConstraintLayout>(R.id.normal_mode).visibility = View.GONE
+        view.findViewById<ConstraintLayout>(R.id.details_mode).visibility = View.VISIBLE
+        view.findViewById<TextView>(R.id.category_title).setText(category.title)
+        view.findViewById<TextView>(R.id.blocking_text_list).text = bucketedTrackers.get(category, categoryBlocked).joinToString("\n")
+        view.findViewById<TextView>(R.id.category_description).setText(category.description)
+        view.findViewById<TextView>(R.id.details_blocking_header).setText(if (categoryBlocked) {
             R.string.enhanced_tracking_protection_blocked
         } else {
             R.string.enhanced_tracking_protection_allowed
         })
 
-        details_back.requestFocus()
-        details_back.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+        view.findViewById<ImageView>(R.id.details_back).requestFocus()
+        view.findViewById<ImageView>(R.id.details_back).sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
     }
 
     /**
@@ -190,22 +190,26 @@ class TrackingProtectionPanelView(
      */
     private fun getLastUsedCategoryView(categoryTitle: String) = when (categoryTitle) {
         CROSS_SITE_TRACKING_COOKIES.name -> {
-            if (cross_site_tracking.isGone) cross_site_tracking_loaded else cross_site_tracking
+            if (view.findViewById<TextView>(R.id.cross_site_tracking).isGone) view.findViewById<TextView>(R.id.cross_site_tracking_loaded) else view.findViewById<TextView>(R.id.cross_site_tracking)
         }
         SOCIAL_MEDIA_TRACKERS.name -> {
-            if (social_media_trackers.isGone) social_media_trackers_loaded else social_media_trackers
+            if (view.findViewById<TextView>(R.id.social_media_trackers).isGone) view.findViewById<TextView>(R.id.social_media_trackers_loaded) else view.findViewById<TextView>(R.id.social_media_trackers)
         }
         FINGERPRINTERS.name -> {
-            if (fingerprinters.isGone) fingerprinters_loaded else fingerprinters
+            if (view.findViewById<TextView>(R.id.fingerprinters).isGone) view.findViewById<TextView>(R.id.fingerprinters_loaded) else view.findViewById<TextView>(R.id.fingerprinters)
         }
         TRACKING_CONTENT.name -> {
-            if (tracking_content.isGone) tracking_content_loaded else tracking_content
+            if (view.findViewById<TextView>(R.id.tracking_content).isGone) view.findViewById<TextView>(R.id.tracking_content_loaded) else view.findViewById<TextView>(R.id.tracking_content)
         }
         CRYPTOMINERS.name -> {
-            if (cryptominers.isGone) cryptominers_loaded else cryptominers
+            if (view.findViewById<TextView>(R.id.cryptominers).isGone)
+                view.findViewById<TextView>(R.id.cryptominers_loaded) else
+            view.findViewById<TextView>(R.id.cryptominers)
         }
         REDIRECT_TRACKERS.name -> {
-            if (redirect_trackers.isGone) redirect_trackers_loaded else redirect_trackers
+            if (view.findViewById<TextView>(R.id.redirect_trackers).isGone)
+                view.findViewById<TextView>(R.id.redirect_trackers_loaded) else
+            view.findViewById<TextView>(R.id.redirect_trackers)
         }
         else -> null
     }
@@ -233,17 +237,17 @@ class TrackingProtectionPanelView(
     }
 
     private fun setCategoryClickListeners() {
-        social_media_trackers.setOnClickListener(this)
-        fingerprinters.setOnClickListener(this)
-        cross_site_tracking.setOnClickListener(this)
-        tracking_content.setOnClickListener(this)
-        cryptominers.setOnClickListener(this)
-        cross_site_tracking_loaded.setOnClickListener(this)
-        social_media_trackers_loaded.setOnClickListener(this)
-        fingerprinters_loaded.setOnClickListener(this)
-        tracking_content_loaded.setOnClickListener(this)
-        cryptominers_loaded.setOnClickListener(this)
-        redirect_trackers_loaded.setOnClickListener(this)
+        view.findViewById<TextView>(R.id.social_media_trackers).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.fingerprinters).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.cross_site_tracking).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.tracking_content).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.cryptominers).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.cross_site_tracking_loaded).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.social_media_trackers_loaded).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.fingerprinters_loaded).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.tracking_content_loaded).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.cryptominers_loaded).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.redirect_trackers_loaded).setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -254,16 +258,16 @@ class TrackingProtectionPanelView(
     }
 
     private fun bindUrl(url: String) {
-        this.url.text = url.toUri().hostWithoutCommonPrefixes
+        this.view.findViewById<TextView>(R.id.url).text = url.toUri().hostWithoutCommonPrefixes
     }
 
     private fun bindTrackingProtectionInfo(isTrackingProtectionOn: Boolean) {
-        trackingProtectionSwitch.trackingProtectionCategoryItemDescription.text =
+        view.findViewById<SwitchCompat>(R.id.trackingProtectionSwitch).findViewById<TextView>(R.id.trackingProtectionCategoryItemDescription).text =
             view.context.getString(if (isTrackingProtectionOn) R.string.etp_panel_on else R.string.etp_panel_off)
-        trackingProtectionSwitch.switch_widget.isChecked = isTrackingProtectionOn
-        trackingProtectionSwitch.switch_widget.jumpDrawablesToCurrentState()
+        view.findViewById<SwitchCompat>(R.id.trackingProtectionSwitch).findViewById<Switch>(R.id.switch_widget).isChecked = isTrackingProtectionOn
+        view.findViewById<SwitchCompat>(R.id.trackingProtectionSwitch).findViewById<Switch>(R.id.switch_widget).jumpDrawablesToCurrentState()
 
-        trackingProtectionSwitch.switch_widget.setOnCheckedChangeListener { _, isChecked ->
+        view.findViewById<SwitchCompat>(R.id.trackingProtectionSwitch).findViewById<Switch>(R.id.switch_widget).setOnCheckedChangeListener { _, isChecked ->
             try {
                 interactor.trackingProtectionToggled(isChecked)
             }catch (e: Exception){

@@ -5,8 +5,8 @@
 package org.mozilla.fenix.exceptions.trackingprotection
 
 import android.text.method.LinkMovementMethod
+import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.component_exceptions.*
 import mozilla.components.concept.engine.content.blocking.TrackingProtectionException
 import org.mozilla.fenix.exceptions.ExceptionsView
 import org.mozilla.fenix.ext.addUnderline
@@ -17,7 +17,6 @@ class TrackingProtectionExceptionsView(
 ) : ExceptionsView<TrackingProtectionException>(container, interactor) {
 
     override val exceptionsAdapter = TrackingProtectionExceptionsAdapter(interactor)
-
     init {
         exceptions_list.apply {
             adapter = exceptionsAdapter

@@ -6,10 +6,12 @@ package org.mozilla.fenix.home.sessioncontrol.viewholders.onboarding
 
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.onboarding_theme_picker.view.*
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.metrics.Event
 import org.mozilla.fenix.components.metrics.Event.OnboardingThemePicker.Theme
@@ -20,10 +22,27 @@ import org.mozilla.fenix.utils.view.addToRadioGroup
 
 class OnboardingThemePickerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
+    val radioLightTheme : OnboardingRadioButton
+    val radioDarkTheme : OnboardingRadioButton
+    val radioFollowDeviceTheme : OnboardingRadioButton
+    val theme_light_image : ImageView
+    val theme_dark_image : ImageView
+    val clickable_region_automatic : View
+
+
     init {
-        val radioLightTheme = view.theme_light_radio_button
-        val radioDarkTheme = view.theme_dark_radio_button
-        val radioFollowDeviceTheme = view.theme_automatic_radio_button
+
+
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.onboarding_theme_picker, view as ViewGroup, false)
+
+        radioLightTheme = view.findViewById(R.id.theme_light_radio_button)
+        radioDarkTheme = view.findViewById(R.id.theme_dark_radio_button)
+        radioFollowDeviceTheme = view.findViewById(R.id.theme_automatic_radio_button)
+        theme_light_image = view.findViewById(R.id.theme_light_image)
+        theme_dark_image = view.findViewById(R.id.theme_dark_image)
+        clickable_region_automatic = view.findViewById(R.id.clickable_region_automatic)
+
 
         radioFollowDeviceTheme.key = if (SDK_INT >= Build.VERSION_CODES.P) {
             R.string.pref_key_follow_device_theme
@@ -36,15 +55,15 @@ class OnboardingThemePickerViewHolder(view: View) : RecyclerView.ViewHolder(view
             radioDarkTheme,
             radioFollowDeviceTheme
         )
-        radioLightTheme.addIllustration(view.theme_light_image)
-        radioDarkTheme.addIllustration(view.theme_dark_image)
+        radioLightTheme.addIllustration(theme_light_image)
+        radioDarkTheme.addIllustration(theme_dark_image)
 
-        view.theme_dark_image.setOnClickListener {
+        theme_dark_image.setOnClickListener {
             it.context.components.analytics.metrics.track(Event.OnboardingThemePicker(Theme.DARK))
             radioDarkTheme.performClick()
         }
 
-        view.theme_light_image.setOnClickListener {
+        theme_light_image.setOnClickListener {
             it.context.components.analytics.metrics.track(Event.OnboardingThemePicker(Theme.LIGHT))
             radioLightTheme.performClick()
         }
@@ -52,9 +71,9 @@ class OnboardingThemePickerViewHolder(view: View) : RecyclerView.ViewHolder(view
         val automaticTitle = view.context.getString(R.string.onboarding_theme_automatic_title)
         val automaticSummary = view.context.getString(R.string.onboarding_theme_automatic_summary)
 
-        view.clickable_region_automatic.contentDescription = "$automaticTitle $automaticSummary"
+        clickable_region_automatic.contentDescription = "$automaticTitle $automaticSummary"
 
-        view.clickable_region_automatic.setOnClickListener {
+        clickable_region_automatic.setOnClickListener {
             it.context.components.analytics.metrics
                 .track(Event.OnboardingThemePicker(Theme.FOLLOW_DEVICE))
             radioFollowDeviceTheme.performClick()

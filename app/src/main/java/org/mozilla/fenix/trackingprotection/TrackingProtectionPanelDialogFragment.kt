@@ -22,7 +22,6 @@ import androidx.lifecycle.whenStarted
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.fragment_tracking_protection.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapNotNull
@@ -102,7 +101,7 @@ class TrackingProtectionPanelDialogFragment : AppCompatDialogFragment(), UserInt
             ::openTrackingProtectionSettings
         )
         trackingProtectionView =
-            TrackingProtectionPanelView(view.fragment_tp, trackingProtectionInteractor)
+            TrackingProtectionPanelView(view.findViewById(R.id.fragment_tp), trackingProtectionInteractor)
         tab?.let { updateTrackers(it) }
         return view
     }

@@ -5,9 +5,10 @@
 package org.mozilla.fenix.share.viewholders
 
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.VisibleForTesting
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.app_share_list_item.view.*
 import org.mozilla.fenix.R
 import org.mozilla.fenix.share.ShareToAppsInteractor
 import org.mozilla.fenix.share.listadapters.AppShareOption
@@ -30,8 +31,8 @@ class AppViewHolder(
     fun bind(item: AppShareOption) {
         application = item
 
-        itemView.appName.text = item.name
-        itemView.appIcon.setImageDrawable(item.icon)
+        itemView.findViewById<TextView>(R.id.appName).text = item.name
+        itemView.findViewById<ImageView>(R.id.appIcon).setImageDrawable(item.icon)
     }
 
     companion object {

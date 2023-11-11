@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_tab_history_dialog.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapNotNull
@@ -47,7 +46,7 @@ class TabHistoryDialogFragment : BottomSheetDialogFragment() {
             customTabId = customTabSessionId
         )
         val tabHistoryView = TabHistoryView(
-            container = tabHistoryLayout,
+            container = view.findViewById(R.id.tabHistoryLayout),
             expandDialog = ::expand,
             interactor = TabHistoryInteractor(controller)
         )

@@ -20,7 +20,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.fragment_saved_logins.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.components.concept.menu.MenuController
 import mozilla.components.concept.menu.Orientation
@@ -99,7 +98,7 @@ class SavedLoginsFragment : Fragment() {
             )
 
         savedLoginsListView = SavedLoginsListView(
-            view.savedLoginsLayout,
+            view.findViewById(R.id.savedLoginsLayout),
             savedLoginsInteractor
         )
         savedLoginsInteractor.loadAndMapLogins()

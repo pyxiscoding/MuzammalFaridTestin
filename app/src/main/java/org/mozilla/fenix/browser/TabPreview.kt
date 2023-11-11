@@ -10,14 +10,18 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.doOnNextLayout
 import androidx.core.view.updateLayoutParams
-import kotlinx.android.synthetic.main.tab_preview.view.*
-import kotlinx.android.synthetic.main.tabs_tray_tab_counter.view.*
+import mozilla.components.browser.tabstray.thumbnail.TabThumbnailView
 import mozilla.components.browser.thumbnails.loader.ThumbnailLoader
 import mozilla.components.concept.base.images.ImageLoadRequest
+import mozilla.components.ui.tabcounter.TabCounter
 import org.mozilla.fenix.R
+import org.mozilla.fenix.databinding.TabPreviewBinding
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.theme.ThemeManager
@@ -30,10 +34,17 @@ class TabPreview @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyle) {
 
     private val thumbnailLoader = ThumbnailLoader(context.components.core.thumbnailStorage)
+    val fakeToolbar: LinearLayout = TODO()
+    val previewThumbnail: TabThumbnailView = TODO()
 
     init {
-        val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.tab_preview, this, true)
+        val view = LayoutInflater.from(context).inflate(R.layout.tab_preview, this, true)
+        val view2 = LayoutInflater.from(context).inflate(R.layout.tabs_tray_tab_counter, this, true)
+
+         fakeToolbar= view.findViewById(R.id.fakeToolbar)
+        previewThumbnail= view.findViewById(R.id.previewThumbnail)
+        val counter_box = view2.findViewById<ImageView>(R.id.counter_box)
+        val counter_text = view2.findViewById<TextView>(R.id.counter_text)
 
         if (!context.settings().shouldUseBottomToolbar) {
             fakeToolbar.updateLayoutParams<LayoutParams> {
@@ -47,8 +58,8 @@ class TabPreview @JvmOverloads constructor(
         }
 
         // Change view properties to avoid confusing the UI tests
-        tab_button.counter_box.id = View.NO_ID
-        tab_button.counter_text.id = View.NO_ID
+        counter_box.id = View.NO_ID
+        counter_text.id = View.NO_ID
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

@@ -6,20 +6,27 @@ package org.mozilla.fenix.home.sessioncontrol.viewholders.topsites
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import kotlinx.android.synthetic.main.top_site_item.view.*
 import mozilla.components.feature.top.sites.TopSite
+import org.mozilla.fenix.R
 import org.mozilla.fenix.home.sessioncontrol.TopSiteInteractor
 import org.mozilla.fenix.perf.StartupTimeline
 
 class TopSitesAdapter(
         private val interactor: TopSiteInteractor
 ) : ListAdapter<TopSite, TopSiteItemViewHolder>(TopSitesDiffCallback) {
+
+    private lateinit var top_site_title: TextView
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopSiteItemViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(TopSiteItemViewHolder.LAYOUT_ID, parent, false)
+        top_site_title = view.findViewById(R.id.top_site_title)
         return TopSiteItemViewHolder(view, interactor)
+
+
     }
 
     override fun onBindViewHolder(holder: TopSiteItemViewHolder, position: Int) {
@@ -40,7 +47,7 @@ class TopSitesAdapter(
                     holder.bind((payloads[0] as TopSite))
                 }
                 is TopSitePayload -> {
-                    holder.itemView.top_site_title.text = (payloads[0] as TopSitePayload).newTitle
+                    holder.itemView.findViewById<TextView>(R.id.top_site_title).text = (payloads[0] as TopSitePayload).newTitle
                 }
             }
         }

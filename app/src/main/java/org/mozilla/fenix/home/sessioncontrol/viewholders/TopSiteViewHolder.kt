@@ -4,9 +4,10 @@
 
 package org.mozilla.fenix.home.sessioncontrol.viewholders
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.component_top_sites.view.*
 import mozilla.components.feature.top.sites.TopSite
 import org.mozilla.fenix.R
 import org.mozilla.fenix.home.sessioncontrol.TopSiteInteractor
@@ -19,12 +20,18 @@ class TopSiteViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private val topSitesAdapter = TopSitesAdapter(interactor)
+    private var top_sites_list: RecyclerView
 
     init {
+
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.component_top_sites, view as ViewGroup, false)
+
+        top_sites_list = view.findViewById(R.id.top_sites_list)
         val gridLayoutManager =
                 AccessibilityGridLayoutManager(view.context, SPAN_COUNT)
 
-        view.top_sites_list.apply {
+        top_sites_list.apply {
             adapter = topSitesAdapter
             layoutManager = gridLayoutManager
         }

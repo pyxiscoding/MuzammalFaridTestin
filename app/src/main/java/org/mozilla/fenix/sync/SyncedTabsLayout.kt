@@ -11,7 +11,8 @@ import androidx.fragment.app.findFragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.component_sync_tabs.view.*
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -42,10 +43,10 @@ class SyncedTabsLayout @JvmOverloads constructor(
     init {
         inflate(getContext(), R.layout.component_sync_tabs, this)
 
-        synced_tabs_list.layoutManager = LinearLayoutManager(context)
-        synced_tabs_list.adapter = adapter
+        findViewById<RecyclerView>(R.id.synced_tabs_list).layoutManager = LinearLayoutManager(context)
+        findViewById<RecyclerView>(R.id.synced_tabs_list).adapter = adapter
 
-        synced_tabs_pull_to_refresh.setOnRefreshListener { listener?.onRefresh() }
+        findViewById<SwipeRefreshLayout>(R.id.synced_tabs_pull_to_refresh).setOnRefreshListener { listener?.onRefresh() }
     }
 
     override fun onError(error: SyncedTabsView.ErrorType) {
@@ -65,7 +66,7 @@ class SyncedTabsLayout @JvmOverloads constructor(
             val errorList: List<SyncedTabsAdapter.AdapterItem> = listOf(errorItem)
             adapter.submitList(errorList)
 
-            synced_tabs_pull_to_refresh.isEnabled = pullToRefreshEnableState(error)
+            findViewById<SwipeRefreshLayout>(R.id.synced_tabs_pull_to_refresh).isEnabled = pullToRefreshEnableState(error)
         }
     }
 
@@ -76,11 +77,11 @@ class SyncedTabsLayout @JvmOverloads constructor(
     }
 
     override fun startLoading() {
-        synced_tabs_pull_to_refresh.isRefreshing = true
+        findViewById<SwipeRefreshLayout>(R.id.synced_tabs_pull_to_refresh).isRefreshing = true
     }
 
     override fun stopLoading() {
-        synced_tabs_pull_to_refresh.isRefreshing = false
+        findViewById<SwipeRefreshLayout>(R.id.synced_tabs_pull_to_refresh).isRefreshing = false
     }
 
     override fun onDetachedFromWindow() {

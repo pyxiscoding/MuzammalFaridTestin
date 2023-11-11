@@ -5,8 +5,9 @@
 package org.mozilla.fenix.settings.logins.view
 
 import android.view.ViewGroup
+import android.widget.TextView
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.fragment_login_detail.*
+import org.mozilla.fenix.R
 import org.mozilla.fenix.settings.logins.LoginsListState
 
 /**
@@ -14,8 +15,8 @@ import org.mozilla.fenix.settings.logins.LoginsListState
  */
 class LoginDetailView(override val containerView: ViewGroup) : LayoutContainer {
     fun update(login: LoginsListState) {
-        webAddressText.text = login.currentItem?.origin
-        usernameText.text = login.currentItem?.username
-        passwordText.text = login.currentItem?.password
+        containerView.findViewById<TextView>(R.id.webAddressText).text = login.currentItem?.origin
+        containerView.findViewById<TextView>(R.id.usernameText).text = login.currentItem?.username
+                containerView.findViewById<TextView>(R.id.passwordText).text = login.currentItem?.password
     }
 }

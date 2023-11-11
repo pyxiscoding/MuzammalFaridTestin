@@ -8,14 +8,18 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.component_saved_logins.view.*
 import org.mozilla.fenix.R
 import org.mozilla.fenix.settings.logins.LoginsListState
 import org.mozilla.fenix.settings.logins.interactor.SavedLoginsInteractor
 import org.mozilla.fenix.ext.addUnderline
+import org.mozilla.fenix.utils.LinkTextView
 
 /**
  * View that contains and configures the Saved Logins List
@@ -32,19 +36,19 @@ class SavedLoginsListView(
     private val loginsAdapter = LoginsAdapter(interactor)
 
     init {
-        view.saved_logins_list.apply {
+        view.findViewById<RecyclerView>(R.id.saved_logins_list).apply {
             adapter = loginsAdapter
             layoutManager = LinearLayoutManager(containerView.context)
             itemAnimator = null
         }
 
-        with(view.saved_passwords_empty_learn_more) {
+        with(view.findViewById<LinkTextView>(R.id.saved_passwords_empty_learn_more)) {
             movementMethod = LinkMovementMethod.getInstance()
             addUnderline()
             setOnClickListener { interactor.onLearnMoreClicked() }
         }
 
-        with(view.saved_passwords_empty_message) {
+        with(view.findViewById<TextView>(R.id.saved_passwords_empty_message)) {
             val appName = context.getString(R.string.app_name)
             text = String.format(
                 context.getString(
@@ -56,11 +60,11 @@ class SavedLoginsListView(
 
     fun update(state: LoginsListState) {
         if (state.isLoading) {
-            view.progress_bar.isVisible = true
+            view.findViewById<ProgressBar>(R.id.progress_bar).isVisible = true
         } else {
-            view.progress_bar.isVisible = false
-            view.saved_logins_list.isVisible = state.loginList.isNotEmpty()
-            view.saved_passwords_empty_view.isVisible = state.loginList.isEmpty()
+            view.findViewById<ProgressBar>(R.id.progress_bar).isVisible = false
+            view.findViewById<RecyclerView>(R.id.saved_logins_list).isVisible = state.loginList.isNotEmpty()
+            view.findViewById<ConstraintLayout>(R.id.saved_passwords_empty_view).isVisible = state.loginList.isEmpty()
         }
         loginsAdapter.submitList(state.filteredItems)
     }

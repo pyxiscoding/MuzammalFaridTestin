@@ -4,19 +4,28 @@
 
 package org.mozilla.fenix.exceptions.viewholders
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.exceptions_description.view.*
 import org.mozilla.fenix.R
+
 
 class ExceptionsHeaderViewHolder(
     view: View,
     @StringRes description: Int
 ) : RecyclerView.ViewHolder(view) {
 
+    var exceptions_description: TextView
     init {
-        view.exceptions_description.text = view.context.getString(description)
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.exceptions_description, view as ViewGroup)
+
+        exceptions_description = view.findViewById(R.id.exceptions_description)
+
+        exceptions_description.text = view.context.getString(description)
     }
 
     companion object {

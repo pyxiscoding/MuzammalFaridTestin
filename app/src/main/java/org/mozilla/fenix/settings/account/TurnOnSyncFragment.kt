@@ -9,12 +9,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import kotlinx.android.synthetic.main.fragment_turn_on_sync.view.*
+import com.google.android.material.button.MaterialButton
 import mozilla.components.concept.sync.AccountObserver
 import mozilla.components.concept.sync.AuthType
 import mozilla.components.concept.sync.OAuthAccount
@@ -111,9 +112,9 @@ class TurnOnSyncFragment : Fragment(), AccountObserver {
         }
 
         val view = inflater.inflate(R.layout.fragment_turn_on_sync, container, false)
-        view.signInScanButton.setOnClickListener(paringClickListener)
-        view.signInEmailButton.setOnClickListener(signInClickListener)
-        view.signInInstructions.text = HtmlCompat.fromHtml(
+        view.findViewById<MaterialButton>(R.id.signInScanButton).setOnClickListener(paringClickListener)
+        view.findViewById<MaterialButton>(R.id.signInEmailButton).setOnClickListener(signInClickListener)
+        view.findViewById<TextView>(R.id.signInInstructions).text = HtmlCompat.fromHtml(
             getString(R.string.sign_in_instructions),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
@@ -122,7 +123,7 @@ class TurnOnSyncFragment : Fragment(), AccountObserver {
             DefaultSyncController(activity = activity as HomeActivity)
         )
 
-        view.createAccount.apply {
+        view.findViewById<TextView>(R.id.createAccount).apply {
             text = HtmlCompat.fromHtml(
                 getString(R.string.sign_in_create_account_text),
                 HtmlCompat.FROM_HTML_MODE_LEGACY

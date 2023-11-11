@@ -4,26 +4,41 @@
 
 package org.mozilla.fenix.home.sessioncontrol.viewholders.onboarding
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.onboarding_whats_new.view.*
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.addUnderline
 import org.mozilla.fenix.home.sessioncontrol.OnboardingInteractor
+import org.mozilla.fenix.utils.LinkTextView
 
 class OnboardingWhatsNewViewHolder(
     view: View,
     private val interactor: OnboardingInteractor
 ) : RecyclerView.ViewHolder(view) {
 
+    private var  header_text: TextView
+    private var  description_text: TextView
+    private var  get_answers: LinkTextView
+
     init {
-        view.header_text.setOnboardingIcon(R.drawable.ic_whats_new)
+
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.onboarding_whats_new, view as ViewGroup, false)
+
+        header_text = view.findViewById(R.id.header_text)
+        description_text = view.findViewById(R.id.description_text)
+        get_answers = view.findViewById(R.id.get_answers)
+
+        header_text.setOnboardingIcon(R.drawable.ic_whats_new)
 
         val appName = view.context.getString(R.string.app_name)
-        view.description_text.text = view.context.getString(R.string.onboarding_whats_new_description, appName)
+        description_text.text = view.context.getString(R.string.onboarding_whats_new_description, appName)
 
-        view.get_answers.addUnderline()
-        view.get_answers.setOnClickListener {
+        get_answers.addUnderline()
+        get_answers.setOnClickListener {
             interactor.onWhatsNewGetAnswersClicked()
         }
     }

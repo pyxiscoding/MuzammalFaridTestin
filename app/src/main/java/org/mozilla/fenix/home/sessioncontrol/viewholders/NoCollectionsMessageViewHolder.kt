@@ -4,10 +4,13 @@
 
 package org.mozilla.fenix.home.sessioncontrol.viewholders
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
-import kotlinx.android.synthetic.main.no_collections_message.*
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
@@ -28,7 +31,19 @@ open class NoCollectionsMessageViewHolder(
     interactor: CollectionInteractor
 ) : ViewHolder(view) {
 
+    var add_tabs_to_collections_button: MaterialButton
+    var remove_collection_placeholder: AppCompatImageButton
+
+
     init {
+
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.no_collections_message, view as ViewGroup, false)
+
+        add_tabs_to_collections_button = view.findViewById(R.id.add_tabs_to_collections_button)
+        remove_collection_placeholder = view.findViewById(R.id.remove_collection_placeholder)
+
+
         add_tabs_to_collections_button.setOnClickListener {
             interactor.onAddTabsToCollectionTapped()
         }

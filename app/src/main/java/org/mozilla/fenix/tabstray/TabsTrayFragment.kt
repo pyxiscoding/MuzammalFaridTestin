@@ -11,16 +11,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.component_tabstray2.*
-import kotlinx.android.synthetic.main.component_tabstray2.view.*
 import org.mozilla.fenix.R
 
 class TabsTrayFragment : AppCompatDialogFragment(), TabsTrayInteractor {
 
     lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
+    lateinit var view: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +34,10 @@ class TabsTrayFragment : AppCompatDialogFragment(), TabsTrayInteractor {
         savedInstanceState: Bundle?
     ): View {
         val containerView = inflater.inflate(R.layout.fragment_tab_tray_dialog, container, false)
-        val view: View = LayoutInflater.from(containerView.context)
+        view = LayoutInflater.from(containerView.context)
             .inflate(R.layout.component_tabstray2, containerView as ViewGroup, true)
 
-        behavior = BottomSheetBehavior.from(view.tab_wrapper)
+        behavior = BottomSheetBehavior.from(view.findViewById<ConstraintLayout>(R.id.tab_wrapper))
 
         return containerView
     }
@@ -48,7 +49,7 @@ class TabsTrayFragment : AppCompatDialogFragment(), TabsTrayInteractor {
     }
 
     override fun setCurrentTrayPosition(position: Int) {
-        tabsTray.currentItem = position
+        view.findViewById<ViewPager2>(R.id.tabsTray).currentItem = position
     }
 
     override fun navigateToBrowser() {
@@ -72,12 +73,12 @@ class TabsTrayFragment : AppCompatDialogFragment(), TabsTrayInteractor {
     }
 
     private fun setupPager(context: Context, interactor: TabsTrayInteractor) {
-        tabsTray.apply {
+        view.findViewById<ViewPager2>(R.id.tabsTray).apply {
             adapter = TrayPagerAdapter(context, interactor)
             isUserInputEnabled = false
         }
 
-        tab_layout.addOnTabSelectedListener(TabLayoutObserver(interactor))
+        view.findViewById<TabLayout>(R.id.tab_layout).addOnTabSelectedListener(TabLayoutObserver(interactor))
     }
 }
 

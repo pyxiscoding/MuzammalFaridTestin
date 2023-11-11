@@ -17,6 +17,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
+import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
@@ -28,7 +29,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.amo_collection_override_dialog.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -343,8 +343,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     }
 
                     setPositiveButton(R.string.customize_addon_collection_ok) { _, _ ->
-                        context.settings().overrideAmoUser = dialogView.custom_amo_user.text.toString()
-                        context.settings().overrideAmoCollection = dialogView.custom_amo_collection.text.toString()
+                        context.settings().overrideAmoUser = dialogView.findViewById<EditText>(R.id.custom_amo_user).text.toString()
+                        context.settings().overrideAmoCollection = dialogView.findViewById<EditText>(R.id.custom_amo_collection).text.toString()
 
                         Toast.makeText(
                             context,
@@ -357,10 +357,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         }, AMO_COLLECTION_OVERRIDE_EXIT_DELAY)
                     }
 
-                    dialogView.custom_amo_collection.setText(context.settings().overrideAmoCollection)
-                    dialogView.custom_amo_user.setText(context.settings().overrideAmoUser)
-                    dialogView.custom_amo_user.requestFocus()
-                    dialogView.custom_amo_user.showKeyboard()
+                    dialogView.findViewById<EditText>(R.id.custom_amo_collection).setText(context.settings().overrideAmoCollection)
+                    dialogView.findViewById<EditText>(R.id.custom_amo_user).setText(context.settings().overrideAmoUser)
+                    dialogView.findViewById<EditText>(R.id.custom_amo_user).requestFocus()
+                    dialogView.findViewById<EditText>(R.id.custom_amo_user).showKeyboard()
                     create()
                 }.show()
 
@@ -449,6 +449,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
      * For <Q && >=N -> Navigate user to Android Default Apps Settings.
      * For <N -> Open sumo page to show user how to change default app.
      */
+    @SuppressLint("ObsoleteSdkInt")
     private fun getClickListenerForMakeDefaultBrowser(): Preference.OnPreferenceClickListener {
         return when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
@@ -469,7 +470,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     true
                 }
             }
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
                 Preference.OnPreferenceClickListener {
                     navigateUserToDefaultAppsSettings()
                     true
@@ -501,7 +502,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun navigateUserToDefaultAppsSettings() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val intent = Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
             startActivity(intent)
         }

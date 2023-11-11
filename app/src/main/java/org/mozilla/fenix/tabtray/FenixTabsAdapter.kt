@@ -7,11 +7,11 @@ package org.mozilla.fenix.tabtray
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.checkbox_item.view.*
-import kotlinx.android.synthetic.main.tab_tray_item.view.*
 import mozilla.components.browser.state.selector.findTab
 import mozilla.components.browser.tabstray.TabViewHolder
 import mozilla.components.browser.tabstray.TabsAdapter
@@ -152,7 +152,7 @@ class FenixTabsAdapter(
     private fun showCheckedIfSelected(tab: Tab, view: View) {
         val shouldBeChecked =
             mode is TabTrayDialogFragmentState.Mode.MultiSelect && selectedItems.contains(tab)
-        view.selected_mask.isVisible = shouldBeChecked
-        view.mozac_browser_tabstray_close.isVisible = mode is TabTrayDialogFragmentState.Mode.Normal
+        view.findViewById<FrameLayout>(R.id.selected_mask).isVisible = shouldBeChecked
+        view.findViewById<AppCompatImageButton>(R.id.mozac_browser_tabstray_close).isVisible = mode is TabTrayDialogFragmentState.Mode.Normal
     }
 }

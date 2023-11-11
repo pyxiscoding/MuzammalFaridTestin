@@ -6,13 +6,14 @@ package org.mozilla.fenix.addons
 
 import android.net.Uri
 import android.view.View
+import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.fragment_add_on_permissions.*
+import androidx.recyclerview.widget.RecyclerView
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.ui.AddonPermissionsAdapter
 import org.mozilla.fenix.R
+import org.mozilla.fenix.container.LayoutContainer
 import org.mozilla.fenix.databinding.FragmentAddOnPermissionsBinding
 import org.mozilla.fenix.theme.ThemeManager
 
@@ -38,7 +39,7 @@ class AddonPermissionsDetailsView(
     }
 
     private fun bindPermissions(addon: Addon) {
-        add_ons_permissions.apply {
+        containerView.findViewById<RecyclerView>(R.id.add_ons_permissions).apply {
             layoutManager = LinearLayoutManager(context)
             val sortedPermissions = addon.translatePermissions(context).sorted()
             adapter = AddonPermissionsAdapter(
@@ -51,7 +52,7 @@ class AddonPermissionsDetailsView(
     }
 
     private fun bindLearnMore() {
-        learn_more_label.setOnClickListener {
+        containerView.findViewById<TextView>(R.id.learn_more_label).setOnClickListener {
             interactor.openWebsite(LEARN_MORE_URL.toUri())
         }
     }

@@ -4,17 +4,19 @@
 
 package org.mozilla.fenix.home.sessioncontrol.viewholders
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import kotlinx.android.synthetic.main.component_top_sites_pager.view.*
 import mozilla.components.feature.top.sites.TopSite
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.metrics.Event
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.home.sessioncontrol.AdapterItem
 import org.mozilla.fenix.home.sessioncontrol.TopSiteInteractor
+import org.mozilla.fenix.home.sessioncontrol.viewholders.topsites.PagerIndicator
 import org.mozilla.fenix.home.sessioncontrol.viewholders.topsites.TopSitesPagerAdapter
 
 class TopSitePagerViewHolder(
@@ -23,26 +25,34 @@ class TopSitePagerViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private val topSitesPagerAdapter = TopSitesPagerAdapter(interactor)
-    private val pageIndicator = view.page_indicator
+    private var pageIndicator: PagerIndicator? = null
     private var currentPage = 0
+    private var top_sites_pager: ViewPager2
 
     private val topSitesPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             if (currentPage != position) {
-                pageIndicator.context.components.analytics.metrics.track(
+                pageIndicator?.context?.components?.analytics?.metrics?.track(
                         Event.TopSiteSwipeCarousel(
                                 position
                         )
                 )
             }
 
-            pageIndicator.setSelection(position)
+            pageIndicator?.setSelection(position)
             currentPage = position
         }
     }
 
     init {
-        view.top_sites_pager.apply {
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.component_top_sites_pager, view as ViewGroup, false)
+
+        top_sites_pager = view.findViewById(R.id.top_sites_pager)
+        pageIndicator = view.findViewById(R.id.page_indicator)
+
+
+        top_sites_pager.apply {
             adapter = topSitesPagerAdapter
             registerOnPageChangeCallback(topSitesPageChangeCallback)
         }
@@ -65,8 +75,8 @@ class TopSitePagerViewHolder(
             0
         }
 
-        pageIndicator.isVisible = numPages > 1
-        pageIndicator.setSize(numPages)
+        pageIndicator?.isVisible = numPages > 1
+        pageIndicator?.setSize(numPages)
     }
 
     companion object {

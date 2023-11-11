@@ -6,10 +6,14 @@ package org.mozilla.fenix.home.sessioncontrol.viewholders
 
 import android.content.Context
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.graphics.BlendModeColorFilterCompat.createBlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat.SRC_IN
-import kotlinx.android.synthetic.main.collection_home_list_row.*
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
 import mozilla.components.browser.state.selector.normalTabs
@@ -28,8 +32,22 @@ class CollectionViewHolder(
     private lateinit var collection: TabCollection
     private var expanded = false
     private var collectionMenu: CollectionItemMenu
+    private var collection_overflow_button: ImageButton
+    private var collection_share_button: ImageButton
+    private var collection_title: TextView
+    private var collection_icon: ImageView
 
     init {
+
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.collection_home_list_row, containerView as ViewGroup, false)
+
+        collection_overflow_button = view.findViewById(R.id.collection_overflow_button)
+        collection_share_button = view.findViewById(R.id.collection_share_button)
+        collection_title = view.findViewById(R.id.collection_title)
+        collection_icon = view.findViewById(R.id.collection_icon)
+
+
         collectionMenu = CollectionItemMenu(
             view.context,
             { view.context.components.core.store.state.normalTabs.isNotEmpty() }

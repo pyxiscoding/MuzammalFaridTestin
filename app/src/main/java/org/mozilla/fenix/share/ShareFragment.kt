@@ -16,7 +16,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import kotlinx.android.synthetic.main.fragment_share.view.*
 import mozilla.components.browser.state.action.ContentAction
 import mozilla.components.browser.state.selector.findTabOrCustomTab
 import mozilla.components.concept.engine.prompt.PromptRequest
@@ -24,6 +23,7 @@ import mozilla.components.feature.accounts.push.SendTabUseCases
 import mozilla.components.feature.share.RecentAppsStorage
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.FenixSnackbar
+import org.mozilla.fenix.databinding.FragmentShareBinding
 import org.mozilla.fenix.ext.getRootView
 import org.mozilla.fenix.ext.requireComponents
 import org.mozilla.fenix.share.listadapters.AppShareOption
@@ -39,6 +39,7 @@ class ShareFragment : AppCompatDialogFragment() {
     private lateinit var shareCloseView: ShareCloseView
     private lateinit var shareToAccountDevicesView: ShareToAccountDevicesView
     private lateinit var shareToAppsView: ShareToAppsView
+    lateinit var binding: FragmentShareBinding
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -61,7 +62,9 @@ class ShareFragment : AppCompatDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_share, container, false)
+
+        binding = FragmentShareBinding.inflate(inflater, container, false)
+
         val shareData = args.data.toList()
 
         val accountManager = requireComponents.backgroundServices.accountManager
@@ -91,24 +94,24 @@ class ShareFragment : AppCompatDialogFragment() {
             }
         )
 
-        view.shareWrapper.setOnClickListener { shareInteractor.onShareClosed() }
+        binding.shareWrapper.setOnClickListener { shareInteractor.onShareClosed() }
         shareToAccountDevicesView =
-            ShareToAccountDevicesView(view.devicesShareLayout, shareInteractor)
+            ShareToAccountDevicesView(binding.devicesShareLayout, shareInteractor)
 
         if (args.showPage) {
             // Show the previous fragment underneath the share background scrim
             // by making it translucent.
-            view.closeSharingScrim.alpha = SHOW_PAGE_ALPHA
-            view.shareWrapper.setOnClickListener { shareInteractor.onShareClosed() }
+            binding.closeSharingScrim.alpha = SHOW_PAGE_ALPHA
+            binding.shareWrapper.setOnClickListener { shareInteractor.onShareClosed() }
         } else {
             // Otherwise, show a list of tabs to share.
-            view.closeSharingScrim.alpha = 1.0f
-            shareCloseView = ShareCloseView(view.closeSharingContent, shareInteractor)
+            binding.closeSharingScrim.alpha = 1.0f
+            shareCloseView = ShareCloseView(binding.closeSharingContent, shareInteractor)
             shareCloseView.setTabs(shareData)
         }
-        shareToAppsView = ShareToAppsView(view.appsShareLayout, shareInteractor)
+        shareToAppsView = ShareToAppsView(binding.appsShareLayout, shareInteractor)
 
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

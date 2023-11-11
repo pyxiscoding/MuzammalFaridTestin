@@ -4,11 +4,13 @@
 
 package org.mozilla.fenix.library.recentlyclosed
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.history_list_item.view.*
 import mozilla.components.browser.state.state.recover.RecoverableTab
 import org.mozilla.fenix.R
+import org.mozilla.fenix.library.LibrarySiteItemView
 import org.mozilla.fenix.library.history.HistoryItemMenu
 import org.mozilla.fenix.utils.Do
 
@@ -18,20 +20,28 @@ class RecentlyClosedItemViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     private var item: RecoverableTab? = null
+    private var viewLayout: View
+    private var history_layout: LibrarySiteItemView
 
     init {
+
+        viewLayout = LayoutInflater.from(view.context)
+            .inflate(R.layout.history_list_item,view as ViewGroup, false)
+
+        history_layout = view.findViewById(R.id.history_layout)
+
         setupMenu()
     }
 
     fun bind(
         item: RecoverableTab
     ) {
-        itemView.history_layout.titleView.text =
+        history_layout.titleView.text =
             if (item.title.isNotEmpty()) item.title else item.url
-        itemView.history_layout.urlView.text = item.url
+        history_layout.urlView.text = item.url
 
         if (this.item?.url != item.url) {
-            itemView.history_layout.loadFavicon(item.url)
+           history_layout.loadFavicon(item.url)
         }
 
         itemView.setOnClickListener {
@@ -59,7 +69,7 @@ class RecentlyClosedItemViewHolder(
             }
         }
 
-        itemView.history_layout.attachMenu(historyMenu.menuController)
+       history_layout.attachMenu(historyMenu.menuController)
     }
 
     companion object {

@@ -9,12 +9,11 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.sync_tabs_error_row.view.*
-import kotlinx.android.synthetic.main.sync_tabs_list_item.view.*
-import kotlinx.android.synthetic.main.view_synced_tabs_group.view.*
-import kotlinx.android.synthetic.main.view_synced_tabs_title.view.*
+import com.google.android.material.button.MaterialButton
 import mozilla.components.concept.sync.DeviceType
 import mozilla.components.feature.syncedtabs.view.SyncedTabsView
 import org.mozilla.fenix.NavGraphDirections
@@ -41,8 +40,8 @@ sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(item
 
         private fun bindTab(tab: AdapterItem.Tab) {
             val active = tab.tab.active()
-            itemView.synced_tab_item_title.text = active.title
-            itemView.synced_tab_item_url.text = active.url
+            itemView.findViewById<TextView>(R.id.synced_tab_item_title).text = active.title
+            itemView.findViewById<TextView>(R.id.synced_tab_item_url).text = active.url
         }
 
         companion object {
@@ -56,13 +55,13 @@ sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(item
             val errorItem = item as AdapterItem.Error
             setErrorMargins()
 
-            itemView.sync_tabs_error_description.text =
+            itemView.findViewById<TextView>(R.id.sync_tabs_error_description).text =
                 itemView.context.getString(errorItem.descriptionResId)
-            itemView.sync_tabs_error_cta_button.visibility = GONE
+            itemView.findViewById<MaterialButton>(R.id.sync_tabs_error_cta_button).visibility = GONE
 
             errorItem.navController?.let { navController ->
-                itemView.sync_tabs_error_cta_button.visibility = VISIBLE
-                itemView.sync_tabs_error_cta_button.setOnClickListener {
+                itemView.findViewById<MaterialButton>(R.id.sync_tabs_error_cta_button).visibility = VISIBLE
+                itemView.findViewById<MaterialButton>(R.id.sync_tabs_error_cta_button).setOnClickListener {
                     navController.navigate(NavGraphDirections.actionGlobalTurnOnSync())
                 }
             }
@@ -85,8 +84,8 @@ sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(item
                 else -> R.drawable.mozac_ic_device_mobile
             }
 
-            itemView.synced_tabs_group_name.text = device.device.displayName
-            itemView.synced_tabs_group_name.setCompoundDrawablesWithIntrinsicBounds(
+            itemView.findViewById<TextView>(R.id.synced_tabs_group_name).text = device.device.displayName
+            itemView.findViewById<TextView>(R.id.synced_tabs_group_name).setCompoundDrawablesWithIntrinsicBounds(
                 deviceLogoDrawable,
                 0,
                 0,
@@ -110,7 +109,7 @@ sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(item
     class TitleViewHolder(itemView: View) : SyncedTabsViewHolder(itemView) {
 
         override fun <T : AdapterItem> bind(item: T, interactor: SyncedTabsView.Listener) {
-            itemView.refresh_icon.setOnClickListener { v ->
+            itemView.findViewById<ImageView>(R.id.refresh_icon).setOnClickListener { v ->
                 val rotation = AnimationUtils.loadAnimation(
                     itemView.context,
                     R.anim.full_rotation

@@ -13,8 +13,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.fragment_recently_closed_tabs.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
@@ -93,7 +93,7 @@ class RecentlyClosedFragment : LibraryPageFragment<RecoverableTab>() {
             )
         )
         _recentlyClosedFragmentView = RecentlyClosedFragmentView(
-            view.recentlyClosedLayout,
+            view.findViewById<LinearLayout>(R.id.recentlyClosedLayout),
             recentlyClosedInteractor
         )
         return view

@@ -12,19 +12,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.Transition
 import androidx.transition.TransitionManager
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.component_collection_creation.*
+import com.google.android.material.button.MaterialButton
 import mozilla.components.feature.tab.collections.TabCollection
 import mozilla.components.support.ktx.android.view.hideKeyboard
 import mozilla.components.support.ktx.android.view.showKeyboard
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.metrics.Event
+import org.mozilla.fenix.container.LayoutContainer
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.toShortUrl
 import org.mozilla.fenix.home.Tab
@@ -36,6 +41,17 @@ class CollectionCreationView(
 
     override val containerView: View = LayoutInflater.from(container.context)
         .inflate(R.layout.component_collection_creation, container, true)
+
+    val bottom_button_bar_layout = containerView.findViewById<ConstraintLayout>(R.id.bottom_button_bar_layout)
+    val collection_constraint_layout = containerView.findViewById<ConstraintLayout>(R.id.collection_constraint_layout)
+    val bottom_bar_icon_button = containerView.findViewById<ImageButton>(R.id.bottom_bar_icon_button)
+    val bottom_bar_text = containerView.findViewById<TextView>(R.id.bottom_bar_text)
+    val save_button = containerView.findViewById<MaterialButton>(R.id.save_button)
+    val back_button = containerView.findViewById<Button>(R.id.back_button)
+    val name_collection_edittext = containerView.findViewById<EditText>(R.id.name_collection_edittext)
+    val tab_list = containerView.findViewById<RecyclerView>(R.id.tab_list)
+    val collections_list = containerView.findViewById<RecyclerView>(R.id.collections_list)
+    val select_all_button = containerView.findViewById<Button>(R.id.select_all_button)
 
     private val bottomBarView = CollectionCreationBottomBarView(
         interactor = interactor,

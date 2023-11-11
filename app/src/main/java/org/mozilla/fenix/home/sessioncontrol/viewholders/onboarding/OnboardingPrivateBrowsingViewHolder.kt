@@ -11,11 +11,14 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ImageSpan
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.onboarding_private_browsing.view.*
 import mozilla.components.support.ktx.android.content.getColorFromAttr
 import mozilla.components.support.ktx.android.content.getDrawableWithTint
 import org.mozilla.fenix.R
@@ -29,15 +32,27 @@ class OnboardingPrivateBrowsingViewHolder(
     private val interactor: OnboardingInteractor
 ) : RecyclerView.ViewHolder(view) {
 
+    private var header_text: TextView
+    private var description_text_once: TextView
+    private var open_settings_button: Button
+
     init {
-        view.header_text.setOnboardingIcon(R.drawable.ic_outline_visibility_off)
+
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.onboarding_private_browsing, view as ViewGroup, false)
+
+        header_text = view.findViewById(R.id.header_text)
+        description_text_once = view.findViewById(R.id.description_text_once)
+        open_settings_button = view.findViewById(R.id.open_settings_button)
+
+        header_text.setOnboardingIcon(R.drawable.ic_outline_visibility_off)
 
         // Display a private browsing icon as a character inside the description text.
         val inlineIcon = PrivateBrowsingImageSpan(
             view.context,
             R.drawable.ic_outline_visibility_off,
             tint = view.context.getColorFromAttr(R.attr.primaryText),
-            size = view.description_text_once.lineHeight
+            size = description_text_once.lineHeight
         )
 
         val text = SpannableString(view.context.getString(R.string.onboarding_private_browsing_description1)).apply {
@@ -51,10 +66,10 @@ class OnboardingPrivateBrowsingViewHolder(
             )
         }
 
-        view.description_text_once.text = text
+        description_text_once.text = text
         Log.d("TAG", "text :" +text)
-        view.description_text_once.contentDescription = String.format(text.toString(), view.header_text.text)
-        view.open_settings_button.setOnClickListener {
+        description_text_once.contentDescription = String.format(text.toString(), header_text.text)
+        open_settings_button.setOnClickListener {
             it.context.components.analytics.metrics.track(Event.OnboardingPrivateBrowsing)
             interactor.onOpenSettingsClicked()
         }

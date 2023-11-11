@@ -6,11 +6,12 @@ package org.mozilla.fenix.home.sessioncontrol.viewholders.onboarding
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.view.LayoutInflater
 import android.view.View
-import androidx.annotation.RequiresApi
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.onboarding_tracking_protection.view.*
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.metrics.Event
 import org.mozilla.fenix.components.metrics.Event.OnboardingTrackingProtection.Setting
@@ -25,16 +26,22 @@ class OnboardingTrackingProtectionViewHolder(view: View) : RecyclerView.ViewHold
     private var standard: OnboardingRadioButton
     private var strict: OnboardingRadioButton
     private var trackingProtectionToggle: SwitchCompat
+    private var description_text: TextView
 
     init {
         //this icon is set on XML now
 //        view.header_text.setOnboardingIcon(R.drawable.ic_onboarding_tracking_protection)
 
-        trackingProtectionToggle = view.tracking_protection_toggle
-        standard = view.tracking_protection_standard_option
-        strict = view.tracking_protection_strict_default
+        val view = LayoutInflater.from(view.context)
+            .inflate(R.layout.onboarding_tracking_protection, view as ViewGroup, false)
 
-        view.description_text.text = view.context.getString(
+
+        trackingProtectionToggle = view.findViewById(R.id.tracking_protection_toggle)
+        standard = view.findViewById(R.id.tracking_protection_standard_option)
+        strict = view.findViewById(R.id.tracking_protection_strict_default)
+        description_text = view.findViewById(R.id.description_text)
+
+        description_text.text = view.context.getString(
                 R.string.onboarding_tracking_protection_description_2
         )
 

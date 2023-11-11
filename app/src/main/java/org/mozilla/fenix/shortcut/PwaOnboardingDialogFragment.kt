@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
-import kotlinx.android.synthetic.main.fragment_create_shortcut.*
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.requireComponents
@@ -34,8 +34,8 @@ class PwaOnboardingDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val components = requireComponents
 
-        cancel_button.setOnClickListener { dismiss() }
-        add_button.setOnClickListener {
+        view.findViewById<MaterialButton>(R.id.cancel_button).setOnClickListener { dismiss() }
+        view.findViewById<MaterialButton>(R.id.add_button).setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 components.useCases.webAppUseCases.addToHomescreen()
             }.invokeOnCompletion {

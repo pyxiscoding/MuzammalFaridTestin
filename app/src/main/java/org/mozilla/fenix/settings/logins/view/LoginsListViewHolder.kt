@@ -4,9 +4,12 @@
 
 package org.mozilla.fenix.settings.logins.view
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.logins_item.*
+import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.loadIntoView
 import org.mozilla.fenix.settings.logins.SavedLogin
@@ -14,11 +17,17 @@ import org.mozilla.fenix.settings.logins.interactor.SavedLoginsInteractor
 import org.mozilla.fenix.utils.view.ViewHolder
 
 class LoginsListViewHolder(
-    view: View,
+    var view: View,
     private val interactor: SavedLoginsInteractor
 ) : ViewHolder(view) {
 
     private var loginItem: SavedLogin? = null
+
+    init {
+        view = LayoutInflater.from(view.context)
+            .inflate(R.layout.logins_item, view as ViewGroup, false)
+
+    }
 
     fun bind(item: SavedLogin) {
         this.loginItem = SavedLogin(
@@ -28,9 +37,9 @@ class LoginsListViewHolder(
             username = item.username,
             timeLastUsed = item.timeLastUsed
         )
-        webAddressView.text = item.origin
-        usernameView.isVisible = item.username.isNotEmpty()
-        usernameView.text = item.username
+        view.findViewById<TextView>(R.id.webAddressView).text = item.origin
+        view.findViewById<TextView>(R.id.usernameView).isVisible = item.username.isNotEmpty()
+        view.findViewById<TextView>(R.id.usernameView).text = item.username
 
         updateFavIcon(item.origin)
 
@@ -40,6 +49,6 @@ class LoginsListViewHolder(
     }
 
     private fun updateFavIcon(url: String) {
-        itemView.context.components.core.icons.loadIntoView(favicon_image, url)
+        itemView.context.components.core.icons.loadIntoView(view.findViewById(R.id.favicon_image), url)
     }
 }
