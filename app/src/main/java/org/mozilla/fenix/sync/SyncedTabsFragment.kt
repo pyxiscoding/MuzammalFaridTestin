@@ -42,7 +42,7 @@ class SyncedTabsFragment : LibraryPageFragment<Tab>() {
         * Needed because the synced tabs error layout is also used in tabs tray where there is no private theme.
         * See https://github.com/mozilla-mobile/fenix/issues/15061
         */
-        setProperErrorColor(view.findViewById<SyncedTabsLayout>(R.id.synced_tabs_list) as RecyclerView)
+        setProperErrorColor(view.findViewById<RecyclerView>(R.id.synced_tabs_list) as RecyclerView)
 
         syncedTabsFeature.set(
             feature = SyncedTabsFeature(

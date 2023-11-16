@@ -143,7 +143,7 @@ class HomeFragment : Fragment() {
     private val collectionStorageObserver = object : TabCollectionStorage.Observer {
         override fun onCollectionRenamed(tabCollection: TabCollection, title: String) {
             lifecycleScope.launch(Main) {
-                binding?.sessionControlRecyclerView?.adapter?.notifyDataSetChanged()
+                binding.sessionControlRecyclerView.adapter?.notifyDataSetChanged()
             }
             showRenamedSnackbar()
         }
@@ -496,7 +496,7 @@ class HomeFragment : Fragment() {
                             true
                         )
                         val icon = BitmapDrawable(context?.resources, scaledIcon)
-                        binding.searchEngineIcon?.setImageDrawable(icon)
+                        binding.searchEngineIcon.setImageDrawable(icon)
                     } else {
                         binding.searchEngineIcon.setImageDrawable(null)
                     }
@@ -1099,12 +1099,12 @@ class HomeFragment : Fragment() {
             browserState.normalTabs.size
         }
 
-        binding?.tabButton?.setCountWithAnimation(tabCount)
+        binding.tabButton.setCountWithAnimation(tabCount)
 //        binding?.add_tabs_to_collections_button?.isVisible = tabCount > 0
     }
 
     private fun handleSwipedItemDeletionCancel() {
-        binding?.sessionControlRecyclerView?.adapter?.notifyDataSetChanged()
+        binding.sessionControlRecyclerView.adapter?.notifyDataSetChanged()
     }
 
     companion object {

@@ -23,6 +23,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
 import org.mozilla.fenix.utils.Settings
 import android.Manifest.permission.CAMERA as CAMERA_PERMISSION
 
+@Suppress("DEPRECATED_ANNOTATION")
 @Parcelize
 enum class PhoneFeature(val androidPermissionsList: Array<String>) : Parcelable {
     CAMERA(arrayOf(CAMERA_PERMISSION)),

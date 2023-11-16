@@ -90,7 +90,7 @@ class InstalledAddonDetailsFragment : Fragment() {
         showToolbar(title)
 
         bindEnableSwitch(view)
-        bindSettings(view)
+        bindSettings()
         bindDetails(view)
         bindPermissions(view)
         bindAllowInPrivateBrowsingSwitch(view)
@@ -179,7 +179,7 @@ class InstalledAddonDetailsFragment : Fragment() {
         }
     }
 
-    private fun bindSettings(view: View) {
+    private fun bindSettings() {
         binding.settings.apply {
             isVisible = shouldSettingsBeVisible()
             setOnClickListener {

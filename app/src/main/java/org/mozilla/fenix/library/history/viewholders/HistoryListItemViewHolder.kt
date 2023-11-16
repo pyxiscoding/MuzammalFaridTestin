@@ -51,7 +51,7 @@ class HistoryListItemViewHolder(
         header_title = viewLayout.findViewById(R.id.header_title)
 
         viewLayout2 = LayoutInflater.from(view.context)
-            .inflate(R.layout.recently_closed_nav_item,view as ViewGroup, false)
+            .inflate(R.layout.recently_closed_nav_item,view , false)
 
         recently_closed_tabs_description = viewLayout2.findViewById(R.id.recently_closed_tabs_description)
 

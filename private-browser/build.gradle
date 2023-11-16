@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion Config.compileSdkVersion
-
+    namespace "mozilla.components.feature.privatemode"
     defaultConfig {
         minSdkVersion Config.minSdkVersion
         targetSdkVersion Config.targetSdkVersion

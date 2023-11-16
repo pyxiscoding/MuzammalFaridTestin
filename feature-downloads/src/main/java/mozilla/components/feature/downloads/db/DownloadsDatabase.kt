@@ -17,7 +17,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 /**
  * Internal database for saving downloads.
  */
-@Database(entities = [DownloadEntity::class], version = 4)
+@Database(entities = [DownloadEntity::class], version = 5)
 @TypeConverters(StatusConverter::class)
 internal abstract class DownloadsDatabase : RoomDatabase() {
     abstract fun downloadDao(): DownloadDao
@@ -34,7 +34,8 @@ internal abstract class DownloadsDatabase : RoomDatabase() {
                 context,
                 DownloadsDatabase::class.java,
                 "mozac_downloads_database"
-            ).fallbackToDestructiveMigration().build().also {
+            ).allowMainThreadQueries()
+                .fallbackToDestructiveMigration().build().also {
                 instance = it
             }
         }

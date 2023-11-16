@@ -7,10 +7,11 @@ package org.mozilla.fenix.trackingprotection
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.withStyledAttributes
-import kotlinx.android.synthetic.main.switch_with_description.view.*
 import mozilla.components.support.ktx.android.view.putCompoundDrawablesRelativeWithIntrinsicBounds
 import org.mozilla.fenix.R
 
@@ -28,16 +29,16 @@ class SwitchWithDescription @JvmOverloads constructor(
                 R.styleable.SwitchWithDescription_switchIcon,
                 R.drawable.ic_tracking_protection
             )
-            switch_widget.putCompoundDrawablesRelativeWithIntrinsicBounds(
+            findViewById<SwitchCompat>(R.id.switch_widget).putCompoundDrawablesRelativeWithIntrinsicBounds(
                 start = AppCompatResources.getDrawable(context, id)
             )
-            trackingProtectionCategoryTitle.text = resources.getString(
+            findViewById<TextView>(R.id.trackingProtectionCategoryTitle).text = resources.getString(
                 getResourceId(
                     R.styleable.SwitchWithDescription_switchTitle,
                     R.string.preference_enhanced_tracking_protection
                 )
             )
-            trackingProtectionCategoryItemDescription.text = resources.getString(
+            findViewById<TextView>(R.id.trackingProtectionCategoryItemDescription).text = resources.getString(
                 getResourceId(
                     R.styleable.SwitchWithDescription_switchDescription,
                     R.string.preference_enhanced_tracking_protection_explanation

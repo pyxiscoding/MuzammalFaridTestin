@@ -20,6 +20,7 @@ import org.mozilla.fenix.utils.Settings
  * @property password Password that's saved for this site
  * @property timeLastUsed Time of last use in milliseconds from the unix epoch.
  */
+@Suppress("DEPRECATED_ANNOTATION")
 @Parcelize
 data class SavedLogin(
     val guid: String,

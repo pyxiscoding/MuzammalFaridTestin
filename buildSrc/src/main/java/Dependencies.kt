@@ -3,20 +3,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 object Versions {
-    const val kotlin = "1.6.10"
-    const val coroutines = "1.4.2"
+    const val kotlin = "1.7.20"
+    const val coroutines = "1.7.2"
 
     // These versions are linked: lint should be X+23.Y.Z of gradle_plugin version, according to:
     // https://github.com/alexjlockwood/android-lint-checks-demo/blob/0245fc027463137b1b4afb97c5295d60dce998b6/dependencies.gradle#L3
-    const val android_gradle_plugin = "4.0.1"
+    const val android_gradle_plugin = "8.1.0"
     const val android_lint_api = "27.0.1"
 
-    const val sentry = "1.7.10"
+    const val sentry = "1.7.30"
     const val leakcanary = "2.8.1"
     const val leanplum = "5.4.0"
-    const val osslicenses_plugin = "0.9.5"
-    const val detekt = "1.9.1"
-    const val jna = "5.6.0"
+    const val osslicenses_plugin = "0.10.6"
+    const val detekt = "1.19.0"
+    const val jna = "5.12.1"
 
     const val androidx_appcompat = "1.2.0"
     const val androidx_biometric = "1.1.0"
@@ -26,26 +26,26 @@ object Versions {
     const val androidx_legacy = "1.0.0"
     const val androidx_annotation = "1.1.0"
     const val androidx_lifecycle = "2.2.0"
-    const val androidx_fragment = "1.2.5"
-    const val androidx_navigation = "2.3.3"
+    const val androidx_fragment = "1.5.1"
+    const val androidx_navigation = "2.5.1"
     const val androidx_recyclerview = "1.2.0-beta01"
-    const val androidx_core = "1.3.2"
+    const val androidx_core = "1.8.0"
     const val androidx_paging = "2.1.2"
     const val androidx_transition = "1.4.0"
-    const val androidx_work = "2.8.1"
+    const val androidx_work = "2.7.1"
     const val google_material = "1.2.1"
 
-    const val mozilla_android_components = AndroidComponents.VERSION
+    const val mozilla_android_components = "74.0.20210319190549"
 
     const val adjust = "4.18.3"
     const val installreferrer = "1.0"
 
-    const val junit = "5.5.2"
+    const val junit = "4.13.2"
     const val mockk = "1.10.0"
 
-    const val mockwebserver = "4.9.0"
+    const val mockwebserver = "3.10.0"
     const val uiautomator = "2.2.0"
-    const val robolectric = "4.3.1"
+    const val robolectric = "4.9"
 
     const val google_ads_id_version = "16.0.0"
 

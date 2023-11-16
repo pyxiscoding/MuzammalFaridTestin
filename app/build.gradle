@@ -192,10 +192,15 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+    buildFeatures {
+        viewBinding = true
+    }
     lintOptions {
         lintConfig file("lint.xml")
         baseline file("lint-baseline.xml")
@@ -205,9 +210,6 @@ android {
         exclude 'META-INF/atomicfu.kotlin_module'
     }
 
-    android {
-        viewBinding.enabled = true
-    }
 
     testOptions {
         unitTests.returnDefaultValues = true
@@ -223,6 +225,7 @@ android {
             minHeapSize = "1024m"
         }
     }
+    namespace "org.mozilla.fenix"
 }
 
 android.applicationVariants.all { variant ->

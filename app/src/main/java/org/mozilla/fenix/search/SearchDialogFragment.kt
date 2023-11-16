@@ -522,7 +522,7 @@ class SearchDialogFragment : AppCompatDialogFragment(), UserInteractionHandler {
                     state.url != state.query
 
             findViewById<View>(R.id.search_suggestions_hint)?.isVisible = showHint
-            binding.searchSuggestionsHintDivider?.isVisible = showHint
+            binding.searchSuggestionsHintDivider.isVisible = showHint
         }
     }
 

@@ -59,8 +59,8 @@ class SitePermissionsManagePhoneFeatureFragment : Fragment() {
     ): View {
         binding = FragmentManageSitePermissionsFeaturePhoneBinding.inflate(inflater, container, false)
 
-        initFirstRadio(binding.root)
-        initSecondRadio(binding.root)
+        initFirstRadio()
+        initSecondRadio()
         initThirdRadio(binding.root)
         initFourthRadio(binding.root)
         bindBlockedByAndroidContainer(binding.root)
@@ -74,7 +74,7 @@ class SitePermissionsManagePhoneFeatureFragment : Fragment() {
         initBlockedByAndroidView(args.phoneFeature, blockedByAndroidView)
     }
 
-    private fun initFirstRadio(rootView: View) {
+    private fun initFirstRadio() {
         with(binding.askToAllowRadio) {
             if (args.phoneFeature == AUTOPLAY_AUDIBLE) {
                 // Disabled because GV does not allow this setting. TODO Reenable after
@@ -99,7 +99,7 @@ class SitePermissionsManagePhoneFeatureFragment : Fragment() {
         }
     }
 
-    private fun initSecondRadio(rootView: View) {
+    private fun initSecondRadio() {
         with(binding.blockRadio) {
             if (args.phoneFeature == AUTOPLAY_AUDIBLE) {
                 text = getCombinedLabel(

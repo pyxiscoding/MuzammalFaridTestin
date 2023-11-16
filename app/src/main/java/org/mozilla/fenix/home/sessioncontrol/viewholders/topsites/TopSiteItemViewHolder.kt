@@ -131,7 +131,7 @@ class TopSiteItemViewHolder(
                     )
 
                     val icon = BitmapDrawable(itemView.context.resources, scaledIcon)
-                    favicon_image?.setImageDrawable(icon)
+                    favicon_image.setImageDrawable(icon)
                 }else
                     itemView.context.components.core.icons.loadIntoView(favicon_image, topSite.url)
             }

@@ -6,7 +6,7 @@
     }
   },
   "name": "Mozilla Android Components - Cookies",
-  "version": "74.0.20210319190549.1111101034",
+  "version": "90.0.7.1115215139",
   "content_scripts": [
     {
       "matches": ["https://*/*"],

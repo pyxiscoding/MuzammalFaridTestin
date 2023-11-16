@@ -7,12 +7,10 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion Config.compileSdkVersion
-
     defaultConfig {
         minSdkVersion Config.minSdkVersion
         targetSdkVersion Config.targetSdkVersion
     }
-
     buildTypes {
         release {
             minifyEnabled false

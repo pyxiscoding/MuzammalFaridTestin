@@ -6,6 +6,7 @@ package org.mozilla.fenix.tabtray
 
 import android.util.Log
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,7 +14,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.tab_tray_grid_item.view.*
 import mozilla.components.browser.state.selector.findTabOrCustomTab
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.tabstray.TabViewHolder
@@ -177,7 +177,7 @@ class TabTrayViewHolder(
 
     override fun updateSelectedTabIndicator(showAsSelected: Boolean) {
         if (itemView.context.settings().gridTabView) {
-            itemView.tab_tray_grid_item.background = if (showAsSelected) {
+            itemView.findViewById<FrameLayout>(R.id.tab_tray_grid_item).background = if (showAsSelected) {
                 AppCompatResources.getDrawable(
                     itemView.context,
                     R.drawable.tab_tray_grid_item_selected_border

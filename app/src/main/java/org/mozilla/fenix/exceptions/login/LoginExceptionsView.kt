@@ -28,7 +28,7 @@ class LoginExceptionsView(
         val exceptions_empty_message = view.findViewById<TextView>(R.id.exceptions_empty_message)
         exceptions_learn_more.isVisible = false
         exceptions_empty_message.text =
-            containerView?.context?.getString(R.string.preferences_passwords_exceptions_description_empty)
+            containerView.context?.getString(R.string.preferences_passwords_exceptions_description_empty)
         exceptions_list.apply {
             adapter = exceptionsAdapter
         }

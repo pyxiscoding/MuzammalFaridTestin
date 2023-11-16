@@ -4,17 +4,20 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize'
 
 android {
     compileSdkVersion Config.compileSdkVersion
-
+    namespace "mozilla.components.feature.downloads"
     defaultConfig {
         minSdkVersion Config.minSdkVersion
         targetSdkVersion Config.targetSdkVersion
     }
-
+    buildFeatures {
+        buildConfig true
+        viewBinding true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -35,8 +38,6 @@ dependencies {
     implementation Deps.kotlin_stdlib
 
     testImplementation Deps.mozilla_support_test
-
-    implementation "org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.4.30"
     implementation "org.mozilla.components:concept-fetch:74.0.2"
     implementation "org.mozilla.components:support-ktx:74.0.2"
     implementation "org.mozilla.components:support-base:74.0.2"
